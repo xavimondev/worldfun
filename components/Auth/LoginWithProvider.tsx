@@ -1,5 +1,6 @@
 import { Button, Center, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { DiscordIc, FacebookIc, GoogleIc, TwitterIc } from 'components/Icons'
+import { signInWithProvider } from 'services/auth'
 
 const LoginWithProvider = () => {
   return (
@@ -15,25 +16,29 @@ const LoginWithProvider = () => {
           Log in to continue
         </Heading>
         {/* Google */}
-        <Button w='full' leftIcon={<GoogleIc />}>
+        <Button w='full' leftIcon={<GoogleIc />} onClick={() => signInWithProvider('google')}>
           <Center>
             <Text>Continue with Google</Text>
           </Center>
         </Button>
         {/* Discord */}
-        <Button w='full' leftIcon={<DiscordIc />}>
+        <Button w='full' leftIcon={<DiscordIc />} onClick={() => signInWithProvider('discord')}>
           <Center>
             <Text>Continue with Discord</Text>
           </Center>
         </Button>
         {/* Twitter */}
-        <Button w='full' leftIcon={<TwitterIc />}>
+        <Button w='full' leftIcon={<TwitterIc />} onClick={() => signInWithProvider('twitter')}>
           <Center>
             <Text>Continue with Twitter</Text>
           </Center>
         </Button>
         {/* Facebook */}
-        <Button w='full' leftIcon={<FacebookIc width='25px' height='25px' />}>
+        <Button
+          w='full'
+          leftIcon={<FacebookIc width='25px' height='25px' />}
+          onClick={() => signInWithProvider('facebook')}
+        >
           <Center>
             <Text>Continue with Facebook</Text>
           </Center>
