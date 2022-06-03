@@ -18,11 +18,12 @@ const useProfile = () => {
         getUserProfile(user).then((profile: Profile | undefined) => {
           setProfile(profile)
           setIsLoading(false)
-          console.log('Profile:', profile)
+          // console.log('Profile:', profile)
         })
       }, 1500)
     }
-  }, [user])
+    // FIX: Dependecy user run useEffect every time I switch tab or move to another page
+  }, [])
 
   return {
     profile,

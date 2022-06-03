@@ -1,3 +1,5 @@
+import React from 'react'
+
 export const GoogleIc = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
@@ -71,6 +73,59 @@ export const FacebookIc = (props: React.SVGProps<SVGSVGElement>) => {
       {...props}
     >
       <path d='M87.178,99.138L86.975,82.468C86.975,82.468 86.966,81.469 86.953,79.864C86.838,66.663 96.785,55.542 109.917,54.188C111.406,54.035 112.697,53.902 113.674,53.801C114.984,53.666 116.301,53.627 117.616,53.685C121.949,53.874 131.905,54.31 131.905,54.31L131.702,73.319L124.076,73.319C122.793,73.319 121.514,73.451 120.258,73.714C119.852,73.799 119.397,73.895 118.911,73.997C113.765,75.074 110.097,79.636 110.148,84.893C110.15,85.16 110.152,85.314 110.152,85.314L110.762,99.342L130.889,99.138L127.839,120.892L110.355,121.095L109.948,173.548C109.948,173.548 110.064,173.528 110.286,173.49C146.696,167.317 173.398,135.865 173.582,98.936L173.582,98.934C174.402,62.156 147.118,30.786 110.582,26.498C103.603,25.68 98.97,25.136 98.97,25.136C98.97,25.136 98.692,25.135 98.169,25.134C57.073,25.025 23.666,58.244 23.544,99.34C23.544,99.341 23.544,99.342 23.544,99.342C23.544,99.342 23.546,99.581 23.548,100.029C23.753,136.93 51.033,168.076 87.585,173.141C87.585,173.141 87.585,173.141 87.585,173.141L86.975,121.095L67.661,121.502L67.661,99.545L87.178,99.138Z' />
+    </svg>
+  )
+}
+
+export const SearchIc = (props: React.SVGProps<SVGSVGElement>) => {
+  return (
+    <svg height='21' viewBox='0 0 21 21' width='21' xmlns='http://www.w3.org/2000/svg' {...props}>
+      <g
+        fill='none'
+        fillRule='evenodd'
+        stroke='currentColor'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      >
+        <circle cx='8.5' cy='8.5' r='5' />
+        <path d='m17.571 17.5-5.571-5.5' />
+      </g>
+    </svg>
+  )
+}
+
+export const NextIc = (props: React.SVGProps<SVGSVGElement>) => {
+  return (
+    <svg height='21' viewBox='0 0 21 21' width='21' xmlns='http://www.w3.org/2000/svg' {...props}>
+      <g
+        fill='none'
+        fillRule='evenodd'
+        stroke='currentColor'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        transform='translate(4 6)'
+      >
+        <path d='m9.5.497 4 4.002-4 4.001' />
+        <path d='m.5 4.5h13' />
+      </g>
+    </svg>
+  )
+}
+
+export const PreviousIc = (props: React.SVGProps<SVGSVGElement>) => {
+  return (
+    <svg height='21' viewBox='0 0 21 21' width='21' xmlns='http://www.w3.org/2000/svg' {...props}>
+      <g
+        fill='none'
+        fillRule='evenodd'
+        stroke='currentColor'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        transform='translate(3 6)'
+      >
+        <path d='m4.499.497-3.999 4.002 4 4.001' />
+        <path d='m13.5 4.5h-13' />
+      </g>
     </svg>
   )
 }
