@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 
 import HeaderSeo from 'components/Seo/HeaderSeo'
 import Layout from 'components/Layout'
-import { Container, Flex, Heading } from '@chakra-ui/react'
+import { Flex, Heading } from '@chakra-ui/react'
 import DifficultyPanel from 'components/Game/DifficultyPanel'
 import CategoryPanel from 'components/Game/CategoryPanel'
 import ModePanel from 'components/Game/ModePanel'
@@ -14,8 +14,8 @@ const Home: NextPage = () => {
       <HeaderSeo title='Home' content='Welcome to this world' />
       <Layout>
         <Flex direction='column' gap={8}>
-          <Heading fontSize='2xl' fontWeight='semibold'>
-            Start new game
+          <Heading fontSize='3xl' fontWeight='semibold'>
+            Start New Game
           </Heading>
           <StepProvider>
             <Flex direction='column' gap={4} alignItems='center' alignContent='center'>
