@@ -25,28 +25,24 @@ const Navbar = () => {
   const { profile } = useProfile()
   return (
     <>
-      <Box rounded='lg' mb={{ base: '35px' }}>
-        <Flex h={16} alignItems='center' justifyContent='space-between'>
-          <Flex gap='5' alignItems='center'>
-            <form>
-              <InputGroup>
-                <InputLeftElement pointerEvents='none'>
-                  <SearchIc />
-                </InputLeftElement>
-                <Input
-                  bg={bg}
-                  type='search'
-                  name='email'
-                  border='none'
-                  placeholder='Paste game code here'
-                  width='auto'
-                />
-              </InputGroup>
-            </form>
-            <Button w='auto' bg='blue.400' color='white'>
-              Search
-            </Button>
-          </Flex>
+      <Box rounded='lg'>
+        <Flex h={16} width='full' alignItems='center' justifyContent='space-between' gap={6}>
+          <form style={{ width: '100%' }}>
+            <InputGroup>
+              <InputLeftElement pointerEvents='none'>
+                <SearchIc />
+              </InputLeftElement>
+              <Input
+                w='full'
+                bg={bg}
+                type='search'
+                name='email'
+                border='none'
+                placeholder='Paste game code here'
+                width='auto'
+              />
+            </InputGroup>
+          </form>
           <Stack direction='row' spacing={7}>
             <Box>
               <Menu>
