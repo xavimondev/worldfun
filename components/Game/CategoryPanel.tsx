@@ -51,6 +51,7 @@ const Category = ({ name, icon, setCategory }: Props) => {
 export const MotionBox = motion<BoxProps>(Box)
 
 const CategoryPanel = () => {
+  const [isDisabled, setDisabled] = useState(true)
   const { step, hidePanelCategory, preferences, setPreferences } = useStep()
   const { category } = step
   if (!category) return null
@@ -61,6 +62,7 @@ const CategoryPanel = () => {
 
   const selectCategory = (idCategory: number) => {
     setPreferences((prevPreferences: any) => ({ ...prevPreferences, category: idCategory }))
+    setDisabled(false)
   }
 
   return (
@@ -106,6 +108,7 @@ const CategoryPanel = () => {
               float='right'
               textTransform='uppercase'
               onClick={startGame}
+              isDisabled={isDisabled}
             >
               start
             </Button>
