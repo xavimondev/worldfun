@@ -25,18 +25,25 @@ const DifficultyPanel = () => {
   return (
     <AnimatePresence>
       <MotionBox
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        // border='solid'
-        // borderWidth={2}
-        // borderColor='whiteAlpha.300'
-        // borderRadius='lg'
-        // padding={5}
-        minHeight='500px'
-        minWidth='500px'
+        width={{
+          base: 'full',
+          md: '500px'
+        }}
       >
         <FormControl mb='48px'>
-          <FormLabel as='legend' fontWeight='bold' fontSize='5xl' color='blue.400' mb={10}>
+          <FormLabel
+            as='legend'
+            fontWeight='bold'
+            fontSize={{
+              base: '2xl',
+              md: '5xl'
+            }}
+            color='blue.400'
+            mb={8}
+          >
             Choose Difficulty
           </FormLabel>
           <RadioGroup name='difficulty' id='difficulty'>

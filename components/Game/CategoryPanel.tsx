@@ -43,7 +43,15 @@ const CategoryPanel = () => {
 
   return (
     <Flex direction='column' gap={6}>
-      <Text fontWeight='bold' fontSize='5xl' color='blue.400' mb={10}>
+      <Text
+        fontWeight='bold'
+        fontSize={{
+          base: '2xl',
+          md: '5xl'
+        }}
+        color='blue.400'
+        mb={8}
+      >
         Choose Category
       </Text>
       <SimpleGrid mb='28px' columns={{ base: 2, md: 4 }} spacing={5}>
