@@ -1,17 +1,13 @@
 import { Category, Difficulty } from 'types/quiz'
 
+import AnyIcon from 'public/svg/any-icon.svg'
 import MovieIcon from 'public/svg/movie-icon.svg'
 import MusicIcon from 'public/svg/music-icon.svg'
 import VideoGamesIcon from 'public/svg/videogames-icon.svg'
 import ComputerIcon from 'public/svg/computer-icon.svg'
-import MathIcon from 'public/svg/math-icon.svg'
-import MythologyIcon from 'public/svg/mythology-icon.svg'
 import SportIcon from 'public/svg/sport-icon.svg'
 import HistoryIcon from 'public/svg/history-icon.svg'
-import VehicleIcon from 'public/svg/vehicle-icon.svg'
-import AnimalIcon from 'public/svg/animal-icon.svg'
-import ComicIcon from 'public/svg/comic-icon.svg'
-import AnyIcon from 'public/svg/any-icon.svg'
+import GeographyIcon from 'public/svg/geography-icon.svg'
 
 const TOTAL_QUESTIONS = 10
 
@@ -21,13 +17,9 @@ const CATEGORIES: Category[] = [
   { id: 12, name: 'Music', icon: MusicIcon },
   { id: 15, name: 'Video Games', icon: VideoGamesIcon },
   { id: 18, name: 'Computers', icon: ComputerIcon },
-  { id: 19, name: 'Mathematics', icon: MathIcon },
-  { id: 20, name: 'Mythology', icon: MythologyIcon },
   { id: 21, name: 'Sports', icon: SportIcon },
-  { id: 23, name: 'History', icon: HistoryIcon },
-  { id: 27, name: 'Animals', icon: AnimalIcon },
-  { id: 28, name: 'Vehicles', icon: VehicleIcon },
-  { id: 29, name: 'Comics', icon: ComicIcon }
+  { id: 22, name: 'History', icon: HistoryIcon },
+  { id: 23, name: 'Geography', icon: GeographyIcon }
 ]
 
 const config = {
