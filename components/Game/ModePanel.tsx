@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Radio,
   RadioGroup,
@@ -16,9 +17,15 @@ import { NextIc } from 'components/Icons'
 export const MotionBox = motion<BoxProps>(Box)
 
 const ModePanel = () => {
-  const { step, showPanelDifficulty } = useStep()
+  const [gameMode, setGameMode] = useState('alone')
+  const { step, showPanelDifficulty, setPreferences } = useStep()
   const { mode } = step
   if (!mode) return null
+
+  const handleModeChange = () => {
+    showPanelDifficulty()
+    setPreferences((prevPreferences: any) => ({ ...prevPreferences, mode: gameMode }))
+  }
 
   return (
     <AnimatePresence>
@@ -44,7 +51,7 @@ const ModePanel = () => {
           >
             Choose Mode
           </FormLabel>
-          <RadioGroup name='mode' id='mode'>
+          <RadioGroup name='mode' id='mode' onChange={setGameMode} value={gameMode}>
             <HStack spacing='34px'>
               <Radio size='lg' value='alone'>
                 Alone
@@ -61,7 +68,7 @@ const ModePanel = () => {
           color='white'
           rightIcon={<NextIc />}
           float='right'
-          onClick={showPanelDifficulty}
+          onClick={handleModeChange}
         >
           NEXT
         </Button>

@@ -1,11 +1,13 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, Dispatch, useContext, useState } from 'react'
 
 type StepState = {
   step: any
+  preferences: any
   showPanelMode: () => void
   showPanelDifficulty: () => void
   showPanelCategory: () => void
   hidePanelCategory: () => void
+  setPreferences: Dispatch<any>
 }
 
 const StepContext = createContext<StepState | undefined>(undefined)
@@ -22,6 +24,7 @@ const initialState = {
 
 export const StepProvider = ({ children }: Props) => {
   const [step, setStep] = useState<any | undefined>(initialState)
+  const [preferences, setPreferences] = useState<any>({})
 
   const showPanelMode = () => setStep({ ...step, mode: true, difficulty: false })
   const showPanelDifficulty = () => setStep({ ...step, mode: false, difficulty: true })
@@ -30,10 +33,12 @@ export const StepProvider = ({ children }: Props) => {
 
   const contextValues = {
     step,
+    preferences,
     showPanelMode,
     showPanelDifficulty,
     showPanelCategory,
-    hidePanelCategory
+    hidePanelCategory,
+    setPreferences
   }
 
   return <StepContext.Provider value={contextValues}>{children}</StepContext.Provider>

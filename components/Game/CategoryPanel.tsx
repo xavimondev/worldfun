@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Image from 'next/image'
 import {
   SimpleGrid,
@@ -23,9 +24,10 @@ type Props = {
   id: number
   name: string
   icon: string
+  setCategory: VoidFunction
 }
 
-const Category = ({ id, name, icon }: Props) => {
+const Category = ({ name, icon, setCategory }: Props) => {
   return (
     <MotionStack
       as='button'
@@ -34,6 +36,7 @@ const Category = ({ id, name, icon }: Props) => {
       align='center'
       justify='center'
       whileHover={{ scale: 1.1 }}
+      onClick={setCategory}
     >
       <Flex mb={1}>
         <Image src={icon} alt={name} width='30' height='30' />
@@ -48,10 +51,17 @@ const Category = ({ id, name, icon }: Props) => {
 export const MotionBox = motion<BoxProps>(Box)
 
 const CategoryPanel = () => {
-  const { step, hidePanelCategory } = useStep()
+  const { step, hidePanelCategory, preferences, setPreferences } = useStep()
   const { category } = step
-  // console.log(mode)
   if (!category) return null
+
+  const startGame = () => {
+    console.log(preferences)
+  }
+
+  const selectCategory = (idCategory: number) => {
+    setPreferences((prevPreferences: any) => ({ ...prevPreferences, category: idCategory }))
+  }
 
   return (
     <AnimatePresence>
@@ -70,7 +80,11 @@ const CategoryPanel = () => {
           </Heading>
           <SimpleGrid mb='28px' columns={{ base: 2, md: 4 }} spacing={5}>
             {config.categories.map((category: Category) => (
-              <Category key={category.id} {...category} />
+              <Category
+                key={category.id}
+                {...category}
+                setCategory={() => selectCategory(category.id)}
+              />
             ))}
           </SimpleGrid>
           <Flex direction='row' justifyContent='space-between'>
@@ -85,7 +99,14 @@ const CategoryPanel = () => {
             >
               previous
             </Button>
-            <Button w='auto' bg='blue.400' color='white' float='right' textTransform='uppercase'>
+            <Button
+              w='auto'
+              bg='blue.400'
+              color='white'
+              float='right'
+              textTransform='uppercase'
+              onClick={startGame}
+            >
               start
             </Button>
           </Flex>

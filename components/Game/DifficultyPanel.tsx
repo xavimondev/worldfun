@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Radio,
   RadioGroup,
@@ -17,10 +18,15 @@ import { NextIc, PreviousIc } from 'components/Icons'
 export const MotionBox = motion<BoxProps>(Box)
 
 const DifficultyPanel = () => {
-  const { step, showPanelCategory, showPanelMode } = useStep()
+  const [gameDifficulty, setGameDifficulty] = useState('easy')
+  const { step, showPanelCategory, showPanelMode, setPreferences } = useStep()
   const { difficulty } = step
-  // console.log(mode)
   if (!difficulty) return null
+
+  const handleDifficultyChange = () => {
+    showPanelCategory()
+    setPreferences((prevPreferences: any) => ({ ...prevPreferences, difficulty: gameDifficulty }))
+  }
 
   return (
     <AnimatePresence>
@@ -46,7 +52,7 @@ const DifficultyPanel = () => {
           >
             Choose Difficulty
           </FormLabel>
-          <RadioGroup name='difficulty' id='difficulty'>
+          <RadioGroup name='difficulty' onChange={setGameDifficulty} value={gameDifficulty}>
             <HStack spacing='34px'>
               <Radio size='lg' value='easy'>
                 Easy
@@ -75,7 +81,7 @@ const DifficultyPanel = () => {
             bg='blue.400'
             color='white'
             rightIcon={<NextIc />}
-            onClick={showPanelCategory}
+            onClick={handleDifficultyChange}
           >
             NEXT
           </Button>
