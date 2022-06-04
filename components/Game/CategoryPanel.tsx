@@ -1,6 +1,16 @@
 import Image from 'next/image'
-import { SimpleGrid, Text, Flex, Stack, StackProps, Button } from '@chakra-ui/react'
-import { motion } from 'framer-motion'
+import {
+  SimpleGrid,
+  Text,
+  Flex,
+  Stack,
+  StackProps,
+  Button,
+  Heading,
+  BoxProps,
+  Box
+} from '@chakra-ui/react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 import { Category } from 'types/quiz'
 import config from 'config/game'
@@ -35,6 +45,8 @@ const Category = ({ id, name, icon }: Props) => {
   )
 }
 
+export const MotionBox = motion<BoxProps>(Box)
+
 const CategoryPanel = () => {
   const { step, hidePanelCategory } = useStep()
   const { category } = step
@@ -42,40 +54,44 @@ const CategoryPanel = () => {
   if (!category) return null
 
   return (
-    <Flex direction='column' gap={6}>
-      <Text
-        fontWeight='bold'
-        fontSize={{
-          base: '2xl',
-          md: '5xl'
-        }}
-        color='blue.400'
-        mb={8}
-      >
-        Choose Category
-      </Text>
-      <SimpleGrid mb='28px' columns={{ base: 2, md: 4 }} spacing={5}>
-        {config.categories.map((category: Category) => (
-          <Category key={category.id} {...category} />
-        ))}
-      </SimpleGrid>
-      <Flex direction='row' justifyContent='space-between'>
-        <Button
-          w='auto'
-          bg='blue.400'
-          color='white'
-          float='right'
-          leftIcon={<PreviousIc />}
-          onClick={hidePanelCategory}
-          textTransform='uppercase'
-        >
-          previous
-        </Button>
-        <Button w='auto' bg='blue.400' color='white' float='right' textTransform='uppercase'>
-          start
-        </Button>
-      </Flex>
-    </Flex>
+    <AnimatePresence>
+      <MotionBox initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+        <Flex direction='column' gap={6}>
+          <Heading
+            fontWeight='bold'
+            fontSize={{
+              base: '2xl',
+              md: '5xl'
+            }}
+            color='blue.400'
+            mb={8}
+          >
+            Choose Category
+          </Heading>
+          <SimpleGrid mb='28px' columns={{ base: 2, md: 4 }} spacing={5}>
+            {config.categories.map((category: Category) => (
+              <Category key={category.id} {...category} />
+            ))}
+          </SimpleGrid>
+          <Flex direction='row' justifyContent='space-between'>
+            <Button
+              w='auto'
+              bg='blue.400'
+              color='white'
+              float='right'
+              leftIcon={<PreviousIc />}
+              onClick={hidePanelCategory}
+              textTransform='uppercase'
+            >
+              previous
+            </Button>
+            <Button w='auto' bg='blue.400' color='white' float='right' textTransform='uppercase'>
+              start
+            </Button>
+          </Flex>
+        </Flex>
+      </MotionBox>
+    </AnimatePresence>
   )
 }
 
