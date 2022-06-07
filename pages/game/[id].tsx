@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import {
   Avatar,
@@ -8,16 +9,15 @@ import {
   Grid,
   GridItem,
   Heading,
-  IconButton,
   List,
   ListItem,
   Stack,
   Text
 } from '@chakra-ui/react'
-import { ExitIc } from 'components/Icons'
+
 import HeaderSeo from 'components/Seo/HeaderSeo'
 import RoomLoader from 'components/Loaders/RoomLoader'
-import { useEffect, useState } from 'react'
+import ExitGameButton from 'components/Buttons/CloseButton'
 
 const RoomGame = () => {
   const [loading, setIsLoading] = useState(true)
@@ -66,13 +66,7 @@ const RoomGame = () => {
               md: 'block'
             }}
           >
-            <IconButton
-              aria-label='Exit game'
-              icon={<ExitIc />}
-              size='lg'
-              backgroundColor='red.500'
-              variant='solid'
-            />
+            <ExitGameButton />
           </GridItem>
           {/* Question section */}
           <GridItem>
@@ -175,13 +169,7 @@ const RoomGame = () => {
               bottom='10px'
               right='10px'
             >
-              <IconButton
-                aria-label='Exit game'
-                icon={<ExitIc />}
-                size='lg'
-                backgroundColor='red.500'
-                variant='solid'
-              />
+              <ExitGameButton />
             </Box>
           </GridItem>
         </Grid>
