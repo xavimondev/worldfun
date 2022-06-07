@@ -17,6 +17,7 @@ import { Category } from 'types/quiz'
 import config from 'config/game'
 import { useStep } from 'context/StepContext'
 import { PreviousIc } from 'components/Icons'
+import { useRouter } from 'next/router'
 
 export const MotionStack = motion<StackProps>(Stack)
 
@@ -51,6 +52,7 @@ const Category = ({ name, icon, setCategory }: Props) => {
 export const MotionBox = motion<BoxProps>(Box)
 
 const CategoryPanel = () => {
+  const router = useRouter()
   const [isDisabled, setDisabled] = useState(true)
   const { step, hidePanelCategory, preferences, setPreferences } = useStep()
   const { category } = step
@@ -58,6 +60,7 @@ const CategoryPanel = () => {
 
   const startGame = () => {
     console.log(preferences)
+    router.push('/game/funny-random-id')
   }
 
   const selectCategory = (idCategory: number) => {

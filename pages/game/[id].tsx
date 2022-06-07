@@ -17,12 +17,20 @@ import {
 import { ExitIc } from 'components/Icons'
 import HeaderSeo from 'components/Seo/HeaderSeo'
 import RoomLoader from 'components/Loaders/RoomLoader'
+import { useEffect, useState } from 'react'
 
 const RoomGame = () => {
+  const [loading, setIsLoading] = useState(true)
   const { query } = useRouter()
   const { id } = query
 
-  if (true) return <RoomLoader roomName='fanny moment with yours' />
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 3000)
+  }, [])
+
+  if (loading) return <RoomLoader roomName='fanny moment with yours' />
 
   return (
     <>
