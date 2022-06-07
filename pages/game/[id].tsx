@@ -16,12 +16,14 @@ import {
 } from '@chakra-ui/react'
 import { ExitIc } from 'components/Icons'
 import HeaderSeo from 'components/Seo/HeaderSeo'
+// import RoomFallback from 'Loaders/RoomLoader'
 
 const RoomGame = () => {
   const { query } = useRouter()
   const { id } = query
-  // Here get preferences from store
-  console.log(id)
+
+  // if (true) return <RoomFallback roomName='fanny moment with yours' />
+
   return (
     <>
       <HeaderSeo title={`Playing on Room ${id}`} content='Enjoy the game ❤️' />
