@@ -7,7 +7,7 @@ type Props = {
   roomName: string
 }
 
-const RoomFallback = ({ roomName }: Props) => {
+const RoomLoader = ({ roomName }: Props) => {
   return (
     <>
       <HeaderSeo
@@ -39,4 +39,4 @@ const RoomFallback = ({ roomName }: Props) => {
   )
 }
 
-export default RoomFallback
+export default RoomLoader

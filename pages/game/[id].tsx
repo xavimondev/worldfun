@@ -16,13 +16,13 @@ import {
 } from '@chakra-ui/react'
 import { ExitIc } from 'components/Icons'
 import HeaderSeo from 'components/Seo/HeaderSeo'
-// import RoomFallback from 'Loaders/RoomLoader'
+import RoomLoader from 'components/Loaders/RoomLoader'
 
 const RoomGame = () => {
   const { query } = useRouter()
   const { id } = query
 
-  // if (true) return <RoomFallback roomName='fanny moment with yours' />
+  if (true) return <RoomLoader roomName='fanny moment with yours' />
 
   return (
     <>
