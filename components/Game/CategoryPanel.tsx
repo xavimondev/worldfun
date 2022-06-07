@@ -26,16 +26,22 @@ type Props = {
   name: string
   icon: string
   setCategory: VoidFunction
+  isSelected: boolean
 }
 
-const Category = ({ name, icon, setCategory }: Props) => {
+const Category = ({ name, icon, setCategory, isSelected }: Props) => {
+  const borderColor = isSelected ? '#12c69d' : '#ccd0d5'
+  const backgroundColor = isSelected ? 'rgba(144, 205, 244, 0.20)' : ''
+
   return (
     <MotionStack
       as='button'
       borderRadius='15px'
-      padding='6px'
+      padding='10px'
       align='center'
       justify='center'
+      borderColor={borderColor}
+      backgroundColor={backgroundColor}
       whileHover={{ scale: 1.1 }}
       onClick={setCategory}
     >
@@ -89,6 +95,7 @@ const CategoryPanel = () => {
                 key={category.id}
                 {...category}
                 setCategory={() => selectCategory(category.id)}
+                isSelected={category.id === preferences.category}
               />
             ))}
           </SimpleGrid>
