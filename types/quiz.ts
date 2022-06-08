@@ -17,7 +17,7 @@ export type Question = {
   incorrect_answers: string[]
   question: string
   type: string
-  listAlternatives?: string[]
+  listAlternatives: string[]
 }
 
 export type Answer = {
@@ -27,7 +27,7 @@ export type Answer = {
   correct_answer: string
 }
 
-export type Quiz = {
+export type Game = {
   questions: Question[]
   answers: Answer[]
   totalScore: number

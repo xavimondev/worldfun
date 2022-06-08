@@ -76,7 +76,17 @@ const CategoryPanel = () => {
   const startGame = () => {
     console.log(preferences)
     setValue(preferences)
-    router.push('/game/funny-random-id')
+    router.push(
+      {
+        pathname: '/game/funny-random-id',
+        query: {
+          idCategory: preferences.idCategory,
+          difficulty: preferences.difficulty
+        }
+      },
+      undefined,
+      { shallow: true }
+    )
   }
 
   const selectCategory = (idCategory: number) => {

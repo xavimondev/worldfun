@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import {
   Avatar,
@@ -15,28 +15,41 @@ import {
   Text
 } from '@chakra-ui/react'
 
+import { Question } from 'types/quiz'
+import { getQuestions } from 'services/game'
+
 import HeaderSeo from 'components/Seo/HeaderSeo'
 import RoomLoader from 'components/Loaders/RoomLoader'
 import ExitGameButton from 'components/Buttons/CloseButton'
-import { getQuestions } from 'services/game'
-import useLocalStorage from 'hooks/useLocalStorage'
 
-const RoomGame = () => {
-  const [preferences] = useLocalStorage<any>('triviafun:preferences', {})
-  const { difficulty, idCategory } = preferences
-  const [loading, setIsLoading] = useState(true)
+const initialState = {
+  questions: [],
+  answers: [],
+  totalScore: 0,
+  isGameOver: false,
+  isLeft: true,
+  currentNumberQuestion: 0
+}
+/*
+3. Show level and its color
+4. Refactor using components
+5. Go to the next question after the user clicks the button and specific time
+6. Show the correct answer after the user clicks the button
+*/
+
+type Props = {
+  dataGame: Question[]
+}
+
+const RoomGame = ({ dataGame }: Props) => {
+  console.log(dataGame)
+  const { category, difficulty, question, listAlternatives } = dataGame[0]
+  // const { questions, answers, totalScore, isGameOver, isLeft, currentNumberQuestion } = gameDetails
   const { query } = useRouter()
   const { id } = query
+  // const currentQuestion = questions[currentNumberQuestion]
 
-  useEffect(() => {
-    console.log(preferences)
-    getQuestions(idCategory, difficulty).then((response) => {
-      console.log(response)
-      setIsLoading(false)
-    })
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  if (loading) return <RoomLoader roomName='fanny moment with yours' />
+  // if (loading) return <RoomLoader roomName='fanny moment with yours' />
 
   return (
     <>
@@ -82,65 +95,32 @@ const RoomGame = () => {
                   Question: 5 / 10
                 </Text>
                 <Text color='#12c69d' fontWeight='bold' fontSize='sm' casing='uppercase'>
-                  geography
+                  {category} - {difficulty}
                 </Text>
                 <Divider marginTop='2' marginBottom='4' />
-                <Text color='white' fontWeight='bold'>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio molestiae
-                  eligendi optio ad quo quas perspiciatis, aspernatur ullam alias quis est soluta
-                  quisquam accusantium ratione, iste ea deserunt doloremque sunt!
-                </Text>
+                <Text
+                  color='white'
+                  fontWeight='bold'
+                  dangerouslySetInnerHTML={{ __html: question }}
+                />
               </Box>
               <Box mb='4'>
                 <Stack spacing='3'>
-                  <Button
-                    color='#12c69d'
-                    borderColor='#12c69d'
-                    boxShadow='none'
-                    pointerEvents={false ? 'none' : 'auto'}
-                    variant='outline'
-                    value='Question one'
-                    outline='none'
-                    _hover={{ bg: 'rgba(144, 205, 244, 0.10)' }}
-                  >
-                    <Text>Question number one</Text>
-                  </Button>
-                  <Button
-                    color='#12c69d'
-                    borderColor='#12c69d'
-                    boxShadow='none'
-                    pointerEvents={false ? 'none' : 'auto'}
-                    variant='outline'
-                    value='Question one'
-                    outline='none'
-                    _hover={{ bg: 'rgba(144, 205, 244, 0.10)' }}
-                  >
-                    <Text>Question number two</Text>
-                  </Button>
-                  <Button
-                    color='#12c69d'
-                    borderColor='#12c69d'
-                    boxShadow='none'
-                    pointerEvents={false ? 'none' : 'auto'}
-                    variant='outline'
-                    value='Question one'
-                    outline='none'
-                    _hover={{ bg: 'rgba(144, 205, 244, 0.10)' }}
-                  >
-                    <Text>Question number three</Text>
-                  </Button>
-                  <Button
-                    color='#12c69d'
-                    borderColor='#12c69d'
-                    boxShadow='none'
-                    pointerEvents={false ? 'none' : 'auto'}
-                    variant='outline'
-                    value='Question one'
-                    outline='none'
-                    _hover={{ bg: 'rgba(144, 205, 244, 0.10)' }}
-                  >
-                    <Text>Question number four</Text>
-                  </Button>
+                  {listAlternatives.map((alternative: string) => (
+                    <Button
+                      key={alternative}
+                      color='#12c69d'
+                      borderColor='#12c69d'
+                      boxShadow='none'
+                      pointerEvents={false ? 'none' : 'auto'}
+                      variant='outline'
+                      value='Question one'
+                      outline='none'
+                      _hover={{ bg: 'rgba(144, 205, 244, 0.10)' }}
+                    >
+                      <Text dangerouslySetInnerHTML={{ __html: alternative }} />
+                    </Button>
+                  ))}
                 </Stack>
               </Box>
             </Flex>
@@ -182,6 +162,24 @@ const RoomGame = () => {
       </Box>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { idCategory, difficulty } = query
+  let data = []
+
+  if (idCategory && difficulty) {
+    const idCategorySelected = Number(idCategory)
+    const difficultySelected = String(difficulty)
+    data = await getQuestions(idCategorySelected, difficultySelected)
+    // TODO: Save preferences on database
+  }
+
+  return {
+    props: {
+      dataGame: data
+    }
+  }
 }
 
 export default RoomGame
