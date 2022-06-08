@@ -38,6 +38,6 @@ export type Quiz = {
 
 export type Preferences = {
   idCategory: number
-  nameCategory: string
   difficulty: string
+  mode: string
 }

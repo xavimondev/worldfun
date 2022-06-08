@@ -13,11 +13,12 @@ import {
 } from '@chakra-ui/react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-import { Category } from 'types/quiz'
+import { Category, Preferences } from 'types/quiz'
 import config from 'config/game'
 import { useStep } from 'context/StepContext'
 import { PreviousIc } from 'components/Icons'
 import { useRouter } from 'next/router'
+import useLocalStorage from 'hooks/useLocalStorage'
 
 export const MotionStack = motion<StackProps>(Stack)
 
@@ -57,15 +58,27 @@ const Category = ({ name, icon, setCategory, isSelected }: Props) => {
 
 export const MotionBox = motion<BoxProps>(Box)
 
+const initialValue: Preferences = {
+  idCategory: 1,
+  mode: 'alone',
+  difficulty: 'easy'
+}
+
 const CategoryPanel = () => {
   const router = useRouter()
   const [isDisabled, setDisabled] = useState(true)
+  const [storedValue, setValue] = useLocalStorage<Preferences>(
+    'triviafun:preferences',
+    initialValue
+  )
+  console.log(storedValue)
   const { step, hidePanelCategory, preferences, setPreferences } = useStep()
   const { category } = step
   if (!category) return null
 
   const startGame = () => {
     console.log(preferences)
+    setValue(preferences)
     router.push('/game/funny-random-id')
   }
 
