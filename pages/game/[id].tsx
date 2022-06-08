@@ -18,17 +18,23 @@ import {
 import HeaderSeo from 'components/Seo/HeaderSeo'
 import RoomLoader from 'components/Loaders/RoomLoader'
 import ExitGameButton from 'components/Buttons/CloseButton'
+import { getQuestions } from 'services/game'
+import useLocalStorage from 'hooks/useLocalStorage'
 
 const RoomGame = () => {
+  const [preferences] = useLocalStorage<any>('triviafun:preferences', {})
+  const { difficulty, idCategory } = preferences
   const [loading, setIsLoading] = useState(true)
   const { query } = useRouter()
   const { id } = query
 
   useEffect(() => {
-    setTimeout(() => {
+    console.log(preferences)
+    getQuestions(idCategory, difficulty).then((response) => {
+      console.log(response)
       setIsLoading(false)
-    }, 3000)
-  }, [])
+    })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) return <RoomLoader roomName='fanny moment with yours' />
 
