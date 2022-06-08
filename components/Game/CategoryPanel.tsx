@@ -67,11 +67,8 @@ const initialValue: Preferences = {
 const CategoryPanel = () => {
   const router = useRouter()
   const [isDisabled, setDisabled] = useState(true)
-  const [storedValue, setValue] = useLocalStorage<Preferences>(
-    'triviafun:preferences',
-    initialValue
-  )
-  console.log(storedValue)
+  const [, setValue] = useLocalStorage<Preferences>('triviafun:preferences', initialValue)
+
   const { step, hidePanelCategory, preferences, setPreferences } = useStep()
   const { category } = step
   if (!category) return null
@@ -83,7 +80,7 @@ const CategoryPanel = () => {
   }
 
   const selectCategory = (idCategory: number) => {
-    setPreferences((prevPreferences: any) => ({ ...prevPreferences, category: idCategory }))
+    setPreferences((prevPreferences: Preferences) => ({ ...prevPreferences, idCategory }))
     setDisabled(false)
   }
 
@@ -108,7 +105,7 @@ const CategoryPanel = () => {
                 key={category.id}
                 {...category}
                 setCategory={() => selectCategory(category.id)}
-                isSelected={category.id === preferences.category}
+                isSelected={category.id === preferences.idCategory}
               />
             ))}
           </SimpleGrid>

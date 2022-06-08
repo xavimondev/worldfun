@@ -1,13 +1,14 @@
-import { createContext, Dispatch, useContext, useState } from 'react'
+import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react'
+import { Preferences } from 'types/quiz'
 
 type StepState = {
   step: any
-  preferences: any
+  preferences: Preferences
   showPanelMode: () => void
   showPanelDifficulty: () => void
   showPanelCategory: () => void
   hidePanelCategory: () => void
-  setPreferences: Dispatch<any>
+  setPreferences: Dispatch<SetStateAction<Preferences>>
 }
 
 const StepContext = createContext<StepState | undefined>(undefined)
@@ -22,9 +23,15 @@ const initialState = {
   category: false
 }
 
+const initialValue: Preferences = {
+  idCategory: 1,
+  mode: 'alone',
+  difficulty: 'easy'
+}
+
 export const StepProvider = ({ children }: Props) => {
   const [step, setStep] = useState<any | undefined>(initialState)
-  const [preferences, setPreferences] = useState<any>({})
+  const [preferences, setPreferences] = useState<Preferences>(initialValue)
 
   const showPanelMode = () => setStep({ ...step, mode: true, difficulty: false })
   const showPanelDifficulty = () => setStep({ ...step, mode: false, difficulty: true })
