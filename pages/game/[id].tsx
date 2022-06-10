@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import {
@@ -9,47 +10,64 @@ import {
   Grid,
   GridItem,
   Heading,
+  HStack,
   List,
   ListItem,
   Stack,
   Text
 } from '@chakra-ui/react'
 
+import config from 'config/game'
 import { Question } from 'types/quiz'
 import { getQuestions } from 'services/game'
 
-import HeaderSeo from 'components/Seo/HeaderSeo'
-import RoomLoader from 'components/Loaders/RoomLoader'
-import ExitGameButton from 'components/Buttons/CloseButton'
+import { getColorItem } from 'utils/getColorAnswer'
+import { getColorByDifficulty } from 'utils/getColorByDifficulty'
 
-const initialState = {
-  questions: [],
-  answers: [],
-  totalScore: 0,
-  isGameOver: false,
-  isLeft: true,
-  currentNumberQuestion: 0
-}
-/*
-3. Show level and its color
-4. Refactor using components
-5. Go to the next question after the user clicks the button and specific time
-6. Show the correct answer after the user clicks the button
-*/
+// import RoomLoader from 'components/Loaders/RoomLoader'
+import HeaderSeo from 'components/Seo/HeaderSeo'
+import ExitGameButton from 'components/Buttons/CloseButton'
 
 type Props = {
   dataGame: Question[]
 }
 
 const RoomGame = ({ dataGame }: Props) => {
-  console.log(dataGame)
-  const { category, difficulty, question, listAlternatives } = dataGame[0]
-  // const { questions, answers, totalScore, isGameOver, isLeft, currentNumberQuestion } = gameDetails
+  const [currentNumberQuestion, setCurrentNumberQuestion] = useState<number>(0)
+  const [totalScore, setTotalScore] = useState<number>(0)
+  const [isGameOver, setIsGameOver] = useState<boolean>(false)
+  const [userAnswer, setUserAnswer] = useState<string>('')
+  const [correctAnswer, setCorrectAnswer] = useState<string>('')
+
+  const { category, difficulty, question, listAlternatives } = dataGame[currentNumberQuestion]
+
   const { query } = useRouter()
   const { id } = query
-  // const currentQuestion = questions[currentNumberQuestion]
 
   // if (loading) return <RoomLoader roomName='fanny moment with yours' />
+
+  const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!isGameOver) {
+      const answerValue = e.currentTarget.value
+      const correctAnswer = dataGame[currentNumberQuestion].correct_answer
+      const isCorrect = correctAnswer === answerValue
+
+      setUserAnswer(answerValue)
+      setCorrectAnswer(correctAnswer)
+
+      if (isCorrect) setTotalScore((prevScore: number) => prevScore + 1)
+
+      // If current number of question is equal to the number total of questions, it means that the game is over
+      const currentPosQuestion = currentNumberQuestion + 1
+      if (currentPosQuestion === config.totalQuestions) {
+        setIsGameOver(true)
+      } else {
+        setTimeout(() => {
+          setCurrentNumberQuestion((currentNumberQuestion: number) => currentNumberQuestion + 1)
+        }, 1000)
+      }
+    }
+  }
 
   return (
     <>
@@ -92,11 +110,21 @@ const RoomGame = ({ dataGame }: Props) => {
             <Flex direction='column' gap={4}>
               <Box mb='6'>
                 <Text color='white' fontWeight='bold' fontSize='3xl'>
-                  Question: 5 / 10
+                  Question: {currentNumberQuestion + 1} / 10
                 </Text>
-                <Text color='#12c69d' fontWeight='bold' fontSize='sm' casing='uppercase'>
-                  {category} - {difficulty}
-                </Text>
+                <HStack>
+                  <Text color='#12c69d' fontWeight='bold' fontSize='sm' casing='uppercase'>
+                    {category}
+                  </Text>
+                  <Text
+                    color={getColorByDifficulty(difficulty)}
+                    fontWeight='bold'
+                    fontSize='sm'
+                    casing='uppercase'
+                  >
+                    {difficulty}
+                  </Text>
+                </HStack>
                 <Divider marginTop='2' marginBottom='4' />
                 <Text
                   color='white'
@@ -109,13 +137,13 @@ const RoomGame = ({ dataGame }: Props) => {
                   {listAlternatives.map((alternative: string) => (
                     <Button
                       key={alternative}
-                      color='#12c69d'
-                      borderColor='#12c69d'
+                      color={getColorItem(alternative, correctAnswer, userAnswer)}
+                      borderColor={getColorItem(alternative, correctAnswer, userAnswer)}
+                      borderWidth={2}
                       boxShadow='none'
-                      pointerEvents={false ? 'none' : 'auto'}
                       variant='outline'
-                      value='Question one'
-                      outline='none'
+                      value={alternative}
+                      onClick={checkAnswer}
                       _hover={{ bg: 'rgba(144, 205, 244, 0.10)' }}
                     >
                       <Text dangerouslySetInnerHTML={{ __html: alternative }} />
@@ -132,12 +160,6 @@ const RoomGame = ({ dataGame }: Props) => {
                 Participants
               </Text>
               <List spacing={6}>
-                <ListItem display='flex' flexDirection='row' gap='10px' alignItems='center'>
-                  <Avatar size='sm' name='Dan Abrahmov' src='https://bit.ly/dan-abramov' />
-                  <Text fontSize='xl' fontWeight='semibold'>
-                    dan
-                  </Text>
-                </ListItem>
                 <ListItem display='flex' flexDirection='row' gap='10px' alignItems='center'>
                   <Avatar size='sm' name='midudev' src='https://midu.dev/images/tags/me.png' />
                   <Text fontSize='xl' fontWeight='semibold'>
