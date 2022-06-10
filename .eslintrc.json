@@ -6,7 +6,7 @@
   },
   "extends": ["next/core-web-vitals", "prettier","plugin:react-hooks/recommended","plugin:@typescript-eslint/recommended"],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["react", "@typescript-eslint", "react-hooks"],
+  "plugins": ["react", "@typescript-eslint", "react-hooks","testing-library"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -34,6 +34,10 @@
     "jsx-quotes": "off",
     "indent": "off",
     "max-len": "off",
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "testing-library/await-async-query": "error",
+    "testing-library/no-await-sync-query": "error",
+    "testing-library/no-debugging-utils": "warn",
+    "testing-library/no-dom-import": "off"
   }
 }
