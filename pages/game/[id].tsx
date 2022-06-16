@@ -129,6 +129,7 @@ const RoomGame = ({ dataGame }: Props) => {
                 <Text
                   color='white'
                   fontWeight='bold'
+                  data-testid='question'
                   dangerouslySetInnerHTML={{ __html: question }}
                 />
               </Box>
@@ -143,6 +144,7 @@ const RoomGame = ({ dataGame }: Props) => {
                       boxShadow='none'
                       variant='outline'
                       value={alternative}
+                      name={alternative}
                       onClick={checkAnswer}
                       _hover={{ bg: 'rgba(144, 205, 244, 0.10)' }}
                     >
