@@ -81,7 +81,6 @@ const RoomGame = ({ dataGame }: Props) => {
           >
             <ExitGameButton />
           </GridItem>
-
           <GridItem>
             {/* Panel game question and its alternatives */}
             <PanelGame

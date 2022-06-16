@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import HeaderSeo from './HeaderSeo'
+import HeaderSeo from 'components/Seo/HeaderSeo'
 
 // I use this guide to test head: https://github.com/vercel/next.js/discussions/11060#discussioncomment-33628
 jest.mock('next/head', () => {
