@@ -1,32 +1,17 @@
 import { useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
-import {
-  Avatar,
-  Box,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  GridItem,
-  Heading,
-  HStack,
-  List,
-  ListItem,
-  Stack,
-  Text
-} from '@chakra-ui/react'
+import { Avatar, Box, Grid, GridItem, Heading, List, ListItem, Text } from '@chakra-ui/react'
 
 import config from 'config/game'
 import { Question } from 'types/quiz'
 import { getQuestions } from 'services/game'
 
-import { getColorItem } from 'utils/getColorAnswer'
-import { getColorByDifficulty } from 'utils/getColorByDifficulty'
-
 // import RoomLoader from 'components/Loaders/RoomLoader'
 import HeaderSeo from 'components/Seo/HeaderSeo'
 import ExitGameButton from 'components/Buttons/CloseButton'
+import PanelGame from 'components/Panels/Game/PanelGame'
+import GameHeader from 'components/Panels/Game/GameHeader'
 
 type Props = {
   dataGame: Question[]
@@ -84,16 +69,7 @@ const RoomGame = ({ dataGame }: Props) => {
           alignItems='center'
         >
           <GridItem>
-            <Heading
-              fontWeight='bold'
-              fontSize={{
-                base: 'xl',
-                md: '2xl',
-                lg: '3xl'
-              }}
-            >
-              Name room whatever name could be here
-            </Heading>
+            <GameHeader roomName='101-wahetever name for this room 🙆‍♂️' />
           </GridItem>
           {/* Exit game */}
           <GridItem
@@ -105,55 +81,19 @@ const RoomGame = ({ dataGame }: Props) => {
           >
             <ExitGameButton />
           </GridItem>
-          {/* Question section */}
+
           <GridItem>
-            <Flex direction='column' gap={4}>
-              <Box mb='6'>
-                <Text color='white' fontWeight='bold' fontSize='3xl'>
-                  Question: {currentNumberQuestion + 1} / 10
-                </Text>
-                <HStack>
-                  <Text color='#12c69d' fontWeight='bold' fontSize='sm' casing='uppercase'>
-                    {category}
-                  </Text>
-                  <Text
-                    color={getColorByDifficulty(difficulty)}
-                    fontWeight='bold'
-                    fontSize='sm'
-                    casing='uppercase'
-                  >
-                    {difficulty}
-                  </Text>
-                </HStack>
-                <Divider marginTop='2' marginBottom='4' />
-                <Text
-                  color='white'
-                  fontWeight='bold'
-                  data-testid='question'
-                  dangerouslySetInnerHTML={{ __html: question }}
-                />
-              </Box>
-              <Box mb='4'>
-                <Stack spacing='3'>
-                  {listAlternatives.map((alternative: string) => (
-                    <Button
-                      key={alternative}
-                      color={getColorItem(alternative, correctAnswer, userAnswer)}
-                      borderColor={getColorItem(alternative, correctAnswer, userAnswer)}
-                      borderWidth={2}
-                      boxShadow='none'
-                      variant='outline'
-                      value={alternative}
-                      name={alternative}
-                      onClick={checkAnswer}
-                      _hover={{ bg: 'rgba(144, 205, 244, 0.10)' }}
-                    >
-                      <Text dangerouslySetInnerHTML={{ __html: alternative }} />
-                    </Button>
-                  ))}
-                </Stack>
-              </Box>
-            </Flex>
+            {/* Panel game question and its alternatives */}
+            <PanelGame
+              currentNumberQuestion={currentNumberQuestion}
+              category={category}
+              difficulty={difficulty}
+              question={question}
+              listAlternatives={listAlternatives}
+              correctAnswer={correctAnswer}
+              userAnswer={userAnswer}
+              checkAnswer={checkAnswer}
+            />
           </GridItem>
           {/* Participants section*/}
           <GridItem alignSelf='start' h='full' position='relative'>
