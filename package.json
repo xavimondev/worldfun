@@ -11,7 +11,7 @@
     "lint": "next lint",
     "lint:fix": "next lint -- --fix",
     "prettier:check": "npx prettier . --write",
-    "migrate:dev": "dotenv -e .env.development.local -- npx prisma migrate dev --name postgres-init",
+    "migrate:dev": "dotenv -e .env.development.local -- npx prisma migrate dev",
     "migrate:devpull": "dotenv -e .env.development.local -- npx prisma db pull"
   },
   "dependencies": {
