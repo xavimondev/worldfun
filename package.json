@@ -10,7 +10,9 @@
     "test:watch": "npm run test -- --watch",
     "lint": "next lint",
     "lint:fix": "next lint -- --fix",
-    "prettier:check": "npx prettier . --write"
+    "prettier:check": "npx prettier . --write",
+    "migrate:dev": "dotenv -e .env.development.local -- npx prisma migrate dev --name postgres-init",
+    "migrate:devpull": "dotenv -e .env.development.local -- npx prisma db pull"
   },
   "dependencies": {
     "@chakra-ui/react": "2.0.2",
@@ -21,6 +23,7 @@
     "prettier": "2.6.2",
     "react": "18.1.0",
     "react-dom": "18.1.0"
+    
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
@@ -31,6 +34,7 @@
     "@types/react-dom": "18.0.4",
     "@typescript-eslint/eslint-plugin": "5.25.0",
     "@typescript-eslint/parser": "5.25.0",
+    "dotenv-cli": "5.1.0",
     "eslint": "8.15.0",
     "eslint-config-next": "12.1.6",
     "eslint-config-prettier": "8.5.0",
