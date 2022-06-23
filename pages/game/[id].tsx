@@ -4,11 +4,10 @@ import { useRouter } from 'next/router'
 import { Avatar, Box, Grid, GridItem, List, ListItem, Text } from '@chakra-ui/react'
 
 import config from 'config/game'
-import { Room } from 'types/room'
 import { Question } from 'types/quiz'
-import { saveRoom } from 'services/room'
 import { getQuestions } from 'services/game'
 
+import { useGame } from 'context/GameContext'
 import RoomLoader from 'components/Loaders/RoomLoader'
 import HeaderSeo from 'components/Seo/HeaderSeo'
 import ExitGameButton from 'components/Buttons/CloseButton'
@@ -26,28 +25,20 @@ const RoomGame = ({ dataGame }: Props) => {
   const [userAnswer, setUserAnswer] = useState<string>('')
   const [correctAnswer, setCorrectAnswer] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  // const { room: roomName } = useStep()
-
+  const { room, saveRoomOnDatabase } = useGame()
+  const { code, name } = room
   const { category, difficulty, question, listAlternatives } = dataGame[currentNumberQuestion]
 
   const { query } = useRouter()
   const { id } = query
 
   useEffect(() => {
-    const saveRoomOnDatabase = async () => {
-      setIsLoading(true)
-      const room: Room = {
-        code: id as string,
-        name: 'whatever name'
-      }
-
-      await saveRoom(room)
-      setIsLoading(false)
-    }
-    saveRoomOnDatabase()
+    setIsLoading(true)
+    //FIXME: Fetching data twice
+    saveRoomOnDatabase().then(() => setIsLoading(false))
   }, [])
 
-  if (isLoading) return <RoomLoader roomName={'whatever name'} />
+  if (isLoading) return <RoomLoader roomName={name} />
 
   const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isGameOver) {
@@ -74,7 +65,7 @@ const RoomGame = ({ dataGame }: Props) => {
 
   return (
     <>
-      <HeaderSeo title={`Playing on Room ${'whatever name'}`} content='Enjoy the game ❤️' />
+      <HeaderSeo title={`Playing on Room ${name}`} content='Enjoy the game ❤️' />
       <Box h='full'>
         <Grid
           m={6}
@@ -87,7 +78,7 @@ const RoomGame = ({ dataGame }: Props) => {
           alignItems='center'
         >
           <GridItem>
-            <GameHeader roomName='101-wahetever name for this room 🙆‍♂️' />
+            <GameHeader roomName={`${name}`} />
           </GridItem>
           {/* Exit game */}
           <GridItem

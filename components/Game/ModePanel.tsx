@@ -14,13 +14,15 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useStep } from 'context/StepContext'
 import { NextIc } from 'components/Icons'
 import InputRoomName from 'components/InputRoomName'
+import { useGame } from 'context/GameContext'
 
 export const MotionBox = motion<BoxProps>(Box)
 
 const ModePanel = () => {
   const [roomName, setRoomName] = useState('')
   const [gameMode, setGameMode] = useState('alone')
-  const { step, showPanelDifficulty, setPreferences, setRoom } = useStep()
+  const { step, showPanelDifficulty, setPreferences } = useStep()
+  const { setRoom } = useGame()
   const { mode } = step
   if (!mode) return null
 
@@ -31,7 +33,8 @@ const ModePanel = () => {
   const handleModeChange = () => {
     const isFieldAllow = getRoomNameLenghtWithoutSpaces() > 4
     if (isFieldAllow) {
-      setRoom(roomName)
+      setRoom((prevValue) => ({ ...prevValue, name: roomName }))
+
       showPanelDifficulty()
       setPreferences((prevPreferences: any) => ({ ...prevPreferences, mode: gameMode }))
     }

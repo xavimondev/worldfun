@@ -15,13 +15,12 @@ import {
 import { motion, AnimatePresence } from 'framer-motion'
 
 import { getGameCode } from 'utils/getRandomValue'
-import { Room } from 'types/room'
 import { Category, Preferences } from 'types/quiz'
 import config from 'config/game'
-import { saveRoom } from 'services/room'
 import useLocalStorage from 'hooks/useLocalStorage'
 import { useStep } from 'context/StepContext'
 import { PreviousIc } from 'components/Icons'
+import { useGame } from 'context/GameContext'
 
 export const MotionStack = motion<StackProps>(Stack)
 
@@ -73,6 +72,7 @@ const CategoryPanel = () => {
   const [, setValue] = useLocalStorage<Preferences>('triviafun:preferences', initialValue)
 
   const { step, hidePanelCategory, preferences, setPreferences } = useStep()
+  const { setRoom } = useGame()
   const { category } = step
   if (!category) return null
 
@@ -80,6 +80,7 @@ const CategoryPanel = () => {
     console.log(preferences)
     setValue(preferences)
     const gameCode = getGameCode()
+    setRoom((prevValue) => ({ ...prevValue, code: gameCode }))
     router.push(
       {
         pathname: `/game/${gameCode}`,
