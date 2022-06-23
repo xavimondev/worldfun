@@ -9,8 +9,6 @@ type StepState = {
   showPanelCategory: () => void
   hidePanelCategory: () => void
   setPreferences: Dispatch<SetStateAction<Preferences>>
-  room: string
-  setRoom: Dispatch<SetStateAction<string>>
 }
 
 const StepContext = createContext<StepState | undefined>(undefined)
@@ -34,7 +32,6 @@ const initialValue: Preferences = {
 export const StepProvider = ({ children }: Props) => {
   const [step, setStep] = useState<any | undefined>(initialState)
   const [preferences, setPreferences] = useState<Preferences>(initialValue)
-  const [room, setRoom] = useState<string>('')
   const showPanelMode = () => setStep({ ...step, mode: true, difficulty: false })
   const showPanelDifficulty = () => setStep({ ...step, mode: false, difficulty: true })
   const showPanelCategory = () => setStep({ ...step, difficulty: false, category: true })
@@ -47,9 +44,7 @@ export const StepProvider = ({ children }: Props) => {
     showPanelDifficulty,
     showPanelCategory,
     hidePanelCategory,
-    setPreferences,
-    room,
-    setRoom
+    setPreferences
   }
 
   return <StepContext.Provider value={contextValues}>{children}</StepContext.Provider>
