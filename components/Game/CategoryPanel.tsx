@@ -72,25 +72,17 @@ const CategoryPanel = () => {
   const [isDisabled, setDisabled] = useState(true)
   const [, setValue] = useLocalStorage<Preferences>('triviafun:preferences', initialValue)
 
-  const { step, hidePanelCategory, preferences, setPreferences, room: roomName } = useStep()
+  const { step, hidePanelCategory, preferences, setPreferences } = useStep()
   const { category } = step
   if (!category) return null
 
   const startGame = async () => {
     console.log(preferences)
     setValue(preferences)
-
-    // Save room on database
-    const room: Room = {
-      code: getGameCode(),
-      name: roomName
-    }
-
-    await saveRoom(room)
-
+    const gameCode = getGameCode()
     router.push(
       {
-        pathname: '/game/funny-random-id',
+        pathname: `/game/${gameCode}`,
         query: {
           idCategory: preferences.idCategory,
           difficulty: preferences.difficulty

@@ -1,13 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
-import { Avatar, Box, Grid, GridItem, Heading, List, ListItem, Text } from '@chakra-ui/react'
+import { Avatar, Box, Grid, GridItem, List, ListItem, Text } from '@chakra-ui/react'
 
 import config from 'config/game'
+import { Room } from 'types/room'
 import { Question } from 'types/quiz'
+import { saveRoom } from 'services/room'
 import { getQuestions } from 'services/game'
 
-// import RoomLoader from 'components/Loaders/RoomLoader'
+import RoomLoader from 'components/Loaders/RoomLoader'
 import HeaderSeo from 'components/Seo/HeaderSeo'
 import ExitGameButton from 'components/Buttons/CloseButton'
 import PanelGame from 'components/Panels/Game/PanelGame'
@@ -23,13 +25,29 @@ const RoomGame = ({ dataGame }: Props) => {
   const [isGameOver, setIsGameOver] = useState<boolean>(false)
   const [userAnswer, setUserAnswer] = useState<string>('')
   const [correctAnswer, setCorrectAnswer] = useState<string>('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  // const { room: roomName } = useStep()
 
   const { category, difficulty, question, listAlternatives } = dataGame[currentNumberQuestion]
 
   const { query } = useRouter()
   const { id } = query
 
-  // if (loading) return <RoomLoader roomName='fanny moment with yours' />
+  useEffect(() => {
+    const saveRoomOnDatabase = async () => {
+      setIsLoading(true)
+      const room: Room = {
+        code: id as string,
+        name: 'whatever name'
+      }
+
+      await saveRoom(room)
+      setIsLoading(false)
+    }
+    saveRoomOnDatabase()
+  }, [])
+
+  if (isLoading) return <RoomLoader roomName={'whatever name'} />
 
   const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isGameOver) {
@@ -56,7 +74,7 @@ const RoomGame = ({ dataGame }: Props) => {
 
   return (
     <>
-      <HeaderSeo title={`Playing on Room ${id}`} content='Enjoy the game ❤️' />
+      <HeaderSeo title={`Playing on Room ${'whatever name'}`} content='Enjoy the game ❤️' />
       <Box h='full'>
         <Grid
           m={6}
