@@ -11,10 +11,10 @@ import {
 } from '@chakra-ui/react'
 import { motion, AnimatePresence } from 'framer-motion'
 
+import { useGame } from 'context/GameContext'
 import { useStep } from 'context/StepContext'
 import { NextIc } from 'components/Icons'
 import InputRoomName from 'components/InputRoomName'
-import { useGame } from 'context/GameContext'
 
 export const MotionBox = motion<BoxProps>(Box)
 

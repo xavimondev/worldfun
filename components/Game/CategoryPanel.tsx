@@ -60,12 +60,6 @@ const Category = ({ name, icon, setCategory, isSelected }: Props) => {
 
 export const MotionBox = motion<BoxProps>(Box)
 
-const initialValue: Preferences = {
-  idCategory: 1,
-  mode: 'alone',
-  difficulty: 'easy'
-}
-
 const CategoryPanel = () => {
   const router = useRouter()
   const [isDisabled, setDisabled] = useState(true)
