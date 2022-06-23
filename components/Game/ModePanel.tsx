@@ -13,18 +13,27 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 import { useStep } from 'context/StepContext'
 import { NextIc } from 'components/Icons'
+import InputRoomName from 'components/InputRoomName'
 
 export const MotionBox = motion<BoxProps>(Box)
 
 const ModePanel = () => {
+  const [roomName, setRoomName] = useState('')
   const [gameMode, setGameMode] = useState('alone')
   const { step, showPanelDifficulty, setPreferences } = useStep()
   const { mode } = step
   if (!mode) return null
 
+  const getRoomNameLenghtWithoutSpaces = () => {
+    return roomName.replaceAll(' ', '').length
+  }
+
   const handleModeChange = () => {
-    showPanelDifficulty()
-    setPreferences((prevPreferences: any) => ({ ...prevPreferences, mode: gameMode }))
+    const isFieldAllow = getRoomNameLenghtWithoutSpaces() > 4
+    if (isFieldAllow) {
+      showPanelDifficulty()
+      setPreferences((prevPreferences: any) => ({ ...prevPreferences, mode: gameMode }))
+    }
   }
 
   return (
@@ -38,6 +47,11 @@ const ModePanel = () => {
           md: '500px'
         }}
       >
+        <InputRoomName
+          roomName={roomName}
+          setRoomName={setRoomName}
+          getRoomNameLenghtWithoutSpaces={getRoomNameLenghtWithoutSpaces}
+        />
         <FormControl mb='48px'>
           <FormLabel
             as='legend'

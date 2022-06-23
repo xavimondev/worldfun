@@ -189,3 +189,18 @@ export const RoomLoaderAnimateIc = (props: React.SVGProps<SVGSVGElement>) => {
     </svg>
   )
 }
+
+export const CheckIc = (props: React.SVGProps<SVGSVGElement>) => {
+  return (
+    <svg height='21' viewBox='0 0 21 21' width='21' xmlns='http://www.w3.org/2000/svg' {...props}>
+      <path
+        d='m.5 5.5 3 3 8.028-8'
+        fill='none'
+        stroke='currentColor'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+        transform='translate(5 6)'
+      />
+    </svg>
+  )
+}
