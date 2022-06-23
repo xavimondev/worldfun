@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import Image from 'next/image'
 import {
   SimpleGrid,
@@ -13,12 +14,14 @@ import {
 } from '@chakra-ui/react'
 import { motion, AnimatePresence } from 'framer-motion'
 
+import { getGameCode } from 'utils/getRandomValue'
+import { Room } from 'types/room'
 import { Category, Preferences } from 'types/quiz'
 import config from 'config/game'
+import { saveRoom } from 'services/room'
+import useLocalStorage from 'hooks/useLocalStorage'
 import { useStep } from 'context/StepContext'
 import { PreviousIc } from 'components/Icons'
-import { useRouter } from 'next/router'
-import useLocalStorage from 'hooks/useLocalStorage'
 
 export const MotionStack = motion<StackProps>(Stack)
 
@@ -69,13 +72,22 @@ const CategoryPanel = () => {
   const [isDisabled, setDisabled] = useState(true)
   const [, setValue] = useLocalStorage<Preferences>('triviafun:preferences', initialValue)
 
-  const { step, hidePanelCategory, preferences, setPreferences } = useStep()
+  const { step, hidePanelCategory, preferences, setPreferences, room: roomName } = useStep()
   const { category } = step
   if (!category) return null
 
-  const startGame = () => {
+  const startGame = async () => {
     console.log(preferences)
     setValue(preferences)
+
+    // Save room on database
+    const room: Room = {
+      code: getGameCode(),
+      name: roomName
+    }
+
+    await saveRoom(room)
+
     router.push(
       {
         pathname: '/game/funny-random-id',
@@ -88,6 +100,7 @@ const CategoryPanel = () => {
       { shallow: true }
     )
   }
+  // TODO: add column to define isGameOver
 
   const selectCategory = (idCategory: number) => {
     setPreferences((prevPreferences: Preferences) => ({ ...prevPreferences, idCategory }))
