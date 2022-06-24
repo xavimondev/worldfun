@@ -18,9 +18,9 @@ import { getGameCode } from 'utils/getRandomValue'
 import { Category, Preferences } from 'types/quiz'
 import config from 'config/game'
 
+import { useGame } from 'context/GameContext'
 import { useStep } from 'context/StepContext'
 import { PreviousIc } from 'components/Icons'
-import { useGame } from 'context/GameContext'
 
 export const MotionStack = motion<StackProps>(Stack)
 
