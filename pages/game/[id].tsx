@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { Avatar, Box, Grid, GridItem, List, ListItem, Text } from '@chakra-ui/react'
+import { Toaster } from 'react-hot-toast'
 
 import config from 'config/game'
+import { showNotification } from 'utils/notification'
 import { copyTextToClipboard } from 'utils/copyClipboard'
 import { Question } from 'types/quiz'
 import { getQuestions } from 'services/game'
@@ -42,7 +44,7 @@ const RoomGame = ({ dataGame }: Props) => {
   // Copy to clipboard the shareableCode and then show notification
   const copyCode = async (code: string) => {
     await copyTextToClipboard(code)
-    // showNotification('shareable code copied to clipboard', 'success')
+    showNotification('Code copied to clipboard', 'success')
   }
 
   if (isLoading) return <RoomLoader roomName={name} />
@@ -139,6 +141,7 @@ const RoomGame = ({ dataGame }: Props) => {
           </GridItem>
         </Grid>
       </Box>
+      <Toaster />
     </>
   )
 }
