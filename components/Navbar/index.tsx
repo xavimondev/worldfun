@@ -59,9 +59,9 @@ const Navbar = () => {
                   </Center>
                   <br />
                   <MenuDivider />
-                  <MenuItem>
-                    <Link href='/profile'>Settings</Link>
-                  </MenuItem>
+                  {/* <MenuItem>
+                    <Link href='/settings'>Settings</Link>
+                  </MenuItem> */}
                   <MenuItem onClick={logout}>Logout</MenuItem>
                 </MenuList>
               </Menu>
