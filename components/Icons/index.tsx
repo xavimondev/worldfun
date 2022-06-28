@@ -197,8 +197,8 @@ export const CheckIc = (props: React.SVGProps<SVGSVGElement>) => {
         d='m.5 5.5 3 3 8.028-8'
         fill='none'
         stroke='currentColor'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeLinecap='round'
+        strokeLinejoin='round'
         transform='translate(5 6)'
       />
     </svg>
