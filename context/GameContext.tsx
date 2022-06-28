@@ -1,6 +1,7 @@
 import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react'
 import { saveRoom } from 'services/room'
 import { Room } from 'types/room'
+import { useStep } from './StepContext'
 
 type GameState = {
   room: Room
@@ -21,6 +22,7 @@ const roomInitialValue = {
 
 export const GameProvider = ({ children }: Props) => {
   const [room, setRoom] = useState<Room>(roomInitialValue)
+  const { preferences } = useStep()
 
   const saveRoomOnDatabase = async () => {
     if (room) {
@@ -30,6 +32,8 @@ export const GameProvider = ({ children }: Props) => {
         name
       }
       await saveRoom(data)
+      // HERE SET ID ROOM
+      console.log(preferences)
     }
   }
 

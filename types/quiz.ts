@@ -38,6 +38,7 @@ export type Game = {
 
 export type Preferences = {
   idCategory: number
+  categoryName: string
   difficulty: string
   mode: string
 }

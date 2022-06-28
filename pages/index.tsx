@@ -6,7 +6,6 @@ import { Flex, Heading } from '@chakra-ui/react'
 import DifficultyPanel from 'components/Game/DifficultyPanel'
 import CategoryPanel from 'components/Game/CategoryPanel'
 import ModePanel from 'components/Game/ModePanel'
-import { StepProvider } from 'context/StepContext'
 
 const Home: NextPage = () => {
   return (
@@ -17,13 +16,11 @@ const Home: NextPage = () => {
           <Heading fontSize='3xl' fontWeight='semibold'>
             Start New Game
           </Heading>
-          <StepProvider>
-            <Flex direction='column' gap={4} alignItems='center' alignContent='center'>
-              <ModePanel />
-              <DifficultyPanel />
-              <CategoryPanel />
-            </Flex>
-          </StepProvider>
+          <Flex direction='column' gap={4} alignItems='center' alignContent='center'>
+            <ModePanel />
+            <DifficultyPanel />
+            <CategoryPanel />
+          </Flex>
         </Flex>
       </Layout>
     </>

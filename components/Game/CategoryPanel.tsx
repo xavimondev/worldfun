@@ -87,8 +87,12 @@ const CategoryPanel = () => {
   }
   // TODO: add column to define isGameOver
 
-  const selectCategory = (idCategory: number) => {
-    setPreferences((prevPreferences: Preferences) => ({ ...prevPreferences, idCategory }))
+  const selectCategory = (idCategory: number, categoryName: string) => {
+    setPreferences((prevPreferences: Preferences) => ({
+      ...prevPreferences,
+      idCategory,
+      categoryName
+    }))
     setDisabled(false)
   }
 
@@ -112,7 +116,7 @@ const CategoryPanel = () => {
               <Category
                 key={category.id}
                 {...category}
-                setCategory={() => selectCategory(category.id)}
+                setCategory={() => selectCategory(category.id, category.name)}
                 isSelected={category.id === preferences.idCategory}
               />
             ))}

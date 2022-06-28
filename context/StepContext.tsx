@@ -25,6 +25,7 @@ const initialState = {
 
 const initialValue: Preferences = {
   idCategory: 1,
+  categoryName: 'Any Category',
   mode: 'alone',
   difficulty: 'easy'
 }

@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { AuthProvider } from 'context/AuthContext'
 import { GameProvider } from 'context/GameContext'
+import { StepProvider } from 'context/StepContext'
 
 const config = {
   initialColorMode: 'dark',
@@ -15,9 +16,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
       <AuthProvider>
-        <GameProvider>
-          <Component {...pageProps} />
-        </GameProvider>
+        <StepProvider>
+          <GameProvider>
+            <Component {...pageProps} />
+          </GameProvider>
+        </StepProvider>
       </AuthProvider>
     </ChakraProvider>
   )
