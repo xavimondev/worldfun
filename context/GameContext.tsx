@@ -1,4 +1,5 @@
 import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react'
+import { savePreferencesGame } from 'services/game'
 import { saveRoom } from 'services/room'
 import { Room } from 'types/room'
 import { useStep } from './StepContext'
@@ -35,6 +36,18 @@ export const GameProvider = ({ children }: Props) => {
       // HERE SET ID ROOM
       console.log(preferences)
     }
+  }
+
+  const savePreferencesGameOnDatabase = async (roomId: Room['id']) => {
+    const { categoryName, mode, difficulty } = preferences
+    const gamePreferences = {
+      difficulty,
+      category: categoryName,
+      mode,
+      roomId
+    }
+    // Save preferences of database
+    await savePreferencesGame(gamePreferences)
   }
 
   const valuesContext = {

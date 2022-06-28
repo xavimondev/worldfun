@@ -1,4 +1,6 @@
 import config from 'config/game'
+import { supabase } from 'services'
+import { Game } from 'types/game'
 import { Question } from 'types/quiz'
 import { shuffleArray } from 'utils/shuffleArray'
 
@@ -24,4 +26,13 @@ export const getQuestions = async (
     console.log(error)
     return []
   }
+}
+
+export const savePreferencesGame = async (game: Game) => {
+  const { data, error } = await supabase.from('Room').insert(game, { returning: 'minimal' })
+  if (error) {
+    console.log(error)
+    return null
+  }
+  return data
 }
