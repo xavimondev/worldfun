@@ -34,7 +34,6 @@ const ModePanel = () => {
     const isFieldAllow = getRoomNameLenghtWithoutSpaces() > 4
     if (isFieldAllow) {
       setRoom((prevValue) => ({ ...prevValue, name: roomName }))
-
       showPanelDifficulty()
       setPreferences((prevPreferences: any) => ({ ...prevPreferences, mode: gameMode }))
     }
@@ -86,6 +85,7 @@ const ModePanel = () => {
           color='white'
           rightIcon={<NextIc />}
           float='right'
+          isDisabled={getRoomNameLenghtWithoutSpaces() < 4}
           onClick={handleModeChange}
         >
           NEXT
