@@ -3,5 +3,4 @@ CREATE TABLE "RoomParticipants" (
   participantId uuid REFERENCES auth.users (id) ON DELETE CASCADE,
   roomId int REFERENCES public."Room" (id) ON DELETE CASCADE,
   createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updatedAt timestamp NOT NULL
 )

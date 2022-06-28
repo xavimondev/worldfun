@@ -3,5 +3,4 @@ export interface Room {
   code: string
   name: string
   createdAt?: Date
-  updateAt?: Date
 }

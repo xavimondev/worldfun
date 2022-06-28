@@ -17,7 +17,6 @@ model Room {
   name String @db.VarChar(255)
   game Game?
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model Game {
@@ -30,7 +29,6 @@ model Game {
   statId Int
   stat Stat @relation(fields: [statId], references: [id])
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model Stat {
@@ -39,5 +37,4 @@ model Stat {
   duration Int @db.Integer
   game Game?
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
