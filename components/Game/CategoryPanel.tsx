@@ -70,7 +70,6 @@ const CategoryPanel = () => {
   if (!category) return null
 
   const startGame = async () => {
-    console.log(preferences)
     const gameCode = getGameCode()
     setRoom((prevValue) => ({ ...prevValue, code: gameCode }))
     router.push(
@@ -85,7 +84,6 @@ const CategoryPanel = () => {
       { shallow: true }
     )
   }
-  // TODO: add column to define isGameOver
 
   const selectCategory = (idCategory: number, categoryName: string) => {
     setPreferences((prevPreferences: Preferences) => ({

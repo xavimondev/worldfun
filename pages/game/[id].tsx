@@ -154,7 +154,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     const idCategorySelected = Number(idCategory)
     const difficultySelected = String(difficulty)
     data = await getQuestions(idCategorySelected, difficultySelected)
-    // TODO: Save preferences on database
   }
 
   return {
