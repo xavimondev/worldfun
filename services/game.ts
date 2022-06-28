@@ -29,7 +29,7 @@ export const getQuestions = async (
 }
 
 export const savePreferencesGame = async (game: Game) => {
-  const { data, error } = await supabase.from('Room').insert(game, { returning: 'minimal' })
+  const { data, error } = await supabase.from<Game>('Game').insert(game, { returning: 'minimal' })
   if (error) {
     console.log(error)
     return null

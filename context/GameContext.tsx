@@ -32,9 +32,11 @@ export const GameProvider = ({ children }: Props) => {
         code,
         name
       }
-      await saveRoom(data)
-      // HERE SET ID ROOM
-      console.log(preferences)
+      const result = await saveRoom(data)
+      if (result) {
+        const { id } = result[0]
+        await savePreferencesGameOnDatabase(id)
+      }
     }
   }
 
