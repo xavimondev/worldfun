@@ -9,3 +9,16 @@ export const saveRoom = async (room: Room) => {
   }
   return data
 }
+
+export const filterRoomsByCode = async (code: string) => {
+  const { data, error } = await supabase
+    .from<Room>('Room')
+    .select('id,name,code')
+    .ilike('code', `%${code}%`)
+
+  if (error) {
+    console.log(error)
+    return null
+  }
+  return data
+}

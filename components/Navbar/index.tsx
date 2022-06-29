@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import {
   Box,
   Flex,
@@ -11,14 +10,11 @@ import {
   MenuDivider,
   Stack,
   Center,
-  useColorModeValue,
-  InputGroup,
-  InputLeftElement,
-  Input
+  useColorModeValue
 } from '@chakra-ui/react'
 import { logout } from 'services/auth'
 import useProfile from 'hooks/useProfile'
-import { SearchIc } from 'components/Icons'
+import Search from 'components/Search'
 
 const Navbar = () => {
   const bg = useColorModeValue('blue.400', '#181b29')
@@ -26,24 +22,9 @@ const Navbar = () => {
   return (
     <>
       <Box rounded='lg'>
-        <Flex h={16} width='full' alignItems='center' justifyContent='space-between' gap={6}>
-          <form style={{ width: '100%' }}>
-            <InputGroup>
-              <InputLeftElement pointerEvents='none'>
-                <SearchIc />
-              </InputLeftElement>
-              <Input
-                w='full'
-                bg={bg}
-                type='search'
-                name='email'
-                border='none'
-                placeholder='Paste game code here'
-                width='auto'
-              />
-            </InputGroup>
-          </form>
-          <Stack direction='row' spacing={7}>
+        <Flex h='auto' width='full' alignItems='center' justifyContent='space-between' gap={6}>
+          <Search />
+          <Stack direction='row' spacing={7} alignSelf='flex-start'>
             <Box>
               <Menu>
                 <MenuButton as={Button} rounded='full' variant='link' cursor='pointer' minW={0}>
