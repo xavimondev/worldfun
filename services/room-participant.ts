@@ -2,7 +2,6 @@ import { RoomParticipant } from 'types/room-participant'
 import { RealtimeSubscription, User } from '@supabase/supabase-js'
 import { supabase } from 'services'
 import { Room } from 'types/room'
-import { SupabaseRealtimeClient } from '@supabase/supabase-js/dist/module/lib/SupabaseRealtimeClient'
 
 /**
  *

@@ -9,6 +9,7 @@ import { showNotification } from 'utils/notification'
 import { copyTextToClipboard } from 'utils/copyClipboard'
 import { Room } from 'types/room'
 import { Question } from 'types/quiz'
+import { listenNewParticipants, removeSubscription } from 'services/room-participant'
 import { getQuestions } from 'services/game'
 
 import { useGame } from 'context/GameContext'
@@ -17,7 +18,6 @@ import HeaderSeo from 'components/Seo/HeaderSeo'
 import ExitGameButton from 'components/Buttons/CloseButton'
 import PanelGame from 'components/Panels/Game/PanelGame'
 import GameHeader from 'components/Panels/Game/GameHeader'
-import { listenNewParticipants, removeSubscription } from 'services/room-participant'
 
 type Props = {
   dataGame: Question[]
