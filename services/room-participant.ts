@@ -1,7 +1,8 @@
 import { RoomParticipant } from 'types/room-participant'
-import { User } from '@supabase/supabase-js'
+import { RealtimeSubscription, User } from '@supabase/supabase-js'
 import { supabase } from 'services'
 import { Room } from 'types/room'
+import { SupabaseRealtimeClient } from '@supabase/supabase-js/dist/module/lib/SupabaseRealtimeClient'
 
 /**
  *
@@ -19,3 +20,18 @@ export const saveParticipant = async (participantId: User['id'], roomId: Room['i
   }
   return data
 }
+
+let clientRealTime: RealtimeSubscription
+
+export const listenNewParticipants = () => {
+  clientRealTime = supabase
+    .from('RoomParticipants')
+    .on('INSERT', (payload) => {
+      console.log('Change received!', payload)
+    })
+    .subscribe()
+  console.log(clientRealTime)
+  // return clientRealTime
+}
+
+export const removeSubscription = () => supabase.removeSubscription(clientRealTime)

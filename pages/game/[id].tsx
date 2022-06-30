@@ -16,6 +16,7 @@ import HeaderSeo from 'components/Seo/HeaderSeo'
 import ExitGameButton from 'components/Buttons/CloseButton'
 import PanelGame from 'components/Panels/Game/PanelGame'
 import GameHeader from 'components/Panels/Game/GameHeader'
+import { listenNewParticipants, removeSubscription } from 'services/room-participant'
 
 type Props = {
   dataGame: Question[]
@@ -38,6 +39,13 @@ const RoomGame = ({ dataGame }: Props) => {
   useEffect(() => {
     setIsLoading(true)
     saveRoomOnDatabase().then(() => setIsLoading(false))
+
+    listenNewParticipants()
+
+    return () => {
+      console.log('Removing subscription')
+      removeSubscription()
+    }
   }, [])
 
   // Copy to clipboard the shareableCode and then show notification
