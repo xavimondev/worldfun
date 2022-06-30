@@ -37,7 +37,6 @@ const RoomGame = ({ dataGame }: Props) => {
 
   useEffect(() => {
     setIsLoading(true)
-    //FIXME: Fetching data twice
     saveRoomOnDatabase().then(() => setIsLoading(false))
   }, [])
 
