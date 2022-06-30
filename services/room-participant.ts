@@ -30,8 +30,11 @@ export const listenNewParticipants = () => {
       console.log('Change received!', payload)
     })
     .subscribe()
-  console.log(clientRealTime)
   // return clientRealTime
 }
 
-export const removeSubscription = () => supabase.removeSubscription(clientRealTime)
+export const removeSubscription = async () => {
+  if (clientRealTime) {
+    await supabase.removeSubscription(clientRealTime)
+  }
+}
