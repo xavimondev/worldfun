@@ -1,6 +1,8 @@
 import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react'
+import { supabase } from 'services'
 import { savePreferencesGame } from 'services/game'
 import { saveRoom } from 'services/room'
+import { saveParticipant } from 'services/room-participant'
 import { Room } from 'types/room'
 import { useStep } from './StepContext'
 
@@ -36,6 +38,7 @@ export const GameProvider = ({ children }: Props) => {
       if (result) {
         const { id } = result[0]
         await savePreferencesGameOnDatabase(id)
+        await saveParticipantOnDatabase(id)
       }
     }
   }
@@ -50,6 +53,12 @@ export const GameProvider = ({ children }: Props) => {
     }
     // Save preferences of database
     await savePreferencesGame(gamePreferences)
+  }
+
+  const saveParticipantOnDatabase = async (roomId: Room['id']) => {
+    const participantId = supabase.auth.user()?.id
+    // It's unlikely that in this part participantId is null
+    await saveParticipant(participantId!, roomId)
   }
 
   const valuesContext = {
