@@ -7,6 +7,7 @@ import { Toaster } from 'react-hot-toast'
 import config from 'config/game'
 import { showNotification } from 'utils/notification'
 import { copyTextToClipboard } from 'utils/copyClipboard'
+import { Room } from 'types/room'
 import { Question } from 'types/quiz'
 import { getQuestions } from 'services/game'
 
@@ -29,7 +30,7 @@ const RoomGame = ({ dataGame }: Props) => {
   const [userAnswer, setUserAnswer] = useState<string>('')
   const [correctAnswer, setCorrectAnswer] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const { room, saveRoomOnDatabase } = useGame()
+  const { room, checkRoomExists, setRoom } = useGame()
   const { code, name } = room
   const { category, difficulty, question, listAlternatives } = dataGame[currentNumberQuestion]
 
@@ -38,13 +39,22 @@ const RoomGame = ({ dataGame }: Props) => {
 
   useEffect(() => {
     setIsLoading(true)
-    saveRoomOnDatabase().then(() => setIsLoading(false))
 
-    listenNewParticipants()
+    if (id) {
+      const roomId = id as string
+      checkRoomExists(roomId).then((room: Room | undefined) => {
+        setIsLoading(false)
+        if (room) {
+          const { name, code } = room
+          setRoom({ name, code })
+        }
+      })
 
-    return () => {
-      console.log('Removing subscription')
-      removeSubscription()
+      listenNewParticipants()
+      return () => {
+        console.log('Removing subscription')
+        removeSubscription()
+      }
     }
   }, [])
 

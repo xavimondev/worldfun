@@ -1,7 +1,7 @@
 import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react'
 import { supabase } from 'services'
 import { savePreferencesGame } from 'services/game'
-import { saveRoom } from 'services/room'
+import { getRoomByCode, saveRoom } from 'services/room'
 import { saveParticipant } from 'services/room-participant'
 import { Room } from 'types/room'
 import { useStep } from './StepContext'
@@ -9,7 +9,7 @@ import { useStep } from './StepContext'
 type GameState = {
   room: Room
   setRoom: Dispatch<SetStateAction<Room>>
-  saveRoomOnDatabase: () => Promise<void>
+  checkRoomExists: (code: string) => Promise<Room | undefined>
 }
 
 const GameContext = createContext<GameState | undefined>(undefined)
@@ -26,6 +26,21 @@ const roomInitialValue = {
 export const GameProvider = ({ children }: Props) => {
   const [room, setRoom] = useState<Room>(roomInitialValue)
   const { preferences } = useStep()
+
+  const checkRoomExists = async (code: string) => {
+    const result = await getRoomByCode(code)
+    if (!result) return
+
+    if (result.length === 0) {
+      saveRoomOnDatabase()
+      return
+    }
+
+    const roomFound = result[0]
+    const { id: roomId } = roomFound
+    await saveParticipantOnDatabase(roomId)
+    return roomFound
+  }
 
   const saveRoomOnDatabase = async () => {
     if (room) {
@@ -64,7 +79,7 @@ export const GameProvider = ({ children }: Props) => {
   const valuesContext = {
     room,
     setRoom,
-    saveRoomOnDatabase
+    checkRoomExists
   }
   return <GameContext.Provider value={valuesContext}>{children}</GameContext.Provider>
 }
