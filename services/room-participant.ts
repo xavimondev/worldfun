@@ -37,3 +37,16 @@ export const removeSubscription = async () => {
     await supabase.removeSubscription(clientRealTime)
   }
 }
+
+export const getTotalParticipantsByRoom = async (roomId: Room['id']) => {
+  const { count, error } = await supabase
+    .from<RoomParticipant>('RoomParticipants')
+    .select('participantId', { count: 'exact' })
+    .eq('roomId', roomId)
+
+  if (error) {
+    console.error(error)
+    return null
+  }
+  return count
+}

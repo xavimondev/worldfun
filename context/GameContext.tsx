@@ -2,7 +2,7 @@ import { createContext, Dispatch, SetStateAction, useContext, useState } from 'r
 import { supabase } from 'services'
 import { savePreferencesGame } from 'services/game'
 import { getRoomByCode, saveRoom } from 'services/room'
-import { saveParticipant } from 'services/room-participant'
+import { getTotalParticipantsByRoom, saveParticipant } from 'services/room-participant'
 import { Room } from 'types/room'
 import { useStep } from './StepContext'
 
@@ -37,8 +37,14 @@ export const GameProvider = ({ children }: Props) => {
     }
 
     const roomFound = result[0]
+
     const { id: roomId } = roomFound
-    await saveParticipantOnDatabase(roomId)
+
+    const totalCurrentParticipants = await getTotalParticipantsByRoom(roomId)
+
+    if (totalCurrentParticipants && totalCurrentParticipants < 2)
+      await saveParticipantOnDatabase(roomId)
+
     return roomFound
   }
 
