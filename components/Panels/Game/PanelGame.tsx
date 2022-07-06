@@ -1,6 +1,6 @@
 import { Box, Divider, Flex, HStack, Text } from '@chakra-ui/react'
-import ListAlternatives from 'components/Alternatives/List'
 import { getColorByDifficulty } from 'utils/getColorByDifficulty'
+import ListAlternatives from 'components/Alternatives/List'
 import Question from './Question'
 
 type Props = {

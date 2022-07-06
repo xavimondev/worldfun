@@ -1,6 +1,6 @@
 import { Button, Center, Flex, Heading, Stack, Text } from '@chakra-ui/react'
-import { DiscordIc, FacebookIc, GoogleIc, TwitterIc } from 'components/Icons'
 import { signInWithProvider } from 'services/auth'
+import { DiscordIc, FacebookIc, GoogleIc, TwitterIc } from 'components/Icons'
 
 const LoginWithProvider = () => {
   return (
