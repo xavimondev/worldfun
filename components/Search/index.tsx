@@ -39,7 +39,7 @@ const Search = () => {
   return (
     <Box width='full'>
       <SearchForm inputRef={inputRef} handleSearch={handleSearch} />
-      <ListRooms listRooms={listRooms} />
+      {listRooms.length > 0 && <ListRooms listRooms={listRooms} />}
     </Box>
   )
 }
