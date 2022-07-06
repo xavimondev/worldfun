@@ -13,12 +13,15 @@ import {
   useColorModeValue
 } from '@chakra-ui/react'
 import { logout } from 'services/auth'
-import useProfile from 'hooks/useProfile'
+import { Profile } from 'types/user'
 import Search from 'components/Search'
 
-const Navbar = () => {
+type Props = {
+  profile: Profile
+}
+
+const Navbar = ({ profile }: Props) => {
   const bg = useColorModeValue('blue.400', '#181b29')
-  const { profile } = useProfile()
   return (
     <>
       <Box rounded='lg'>
@@ -28,15 +31,15 @@ const Navbar = () => {
             <Box>
               <Menu>
                 <MenuButton as={Button} rounded='full' variant='link' cursor='pointer' minW={0}>
-                  <Avatar size='sm' src={profile?.avatar_url} />
+                  <Avatar size='sm' src={profile.avatar_url} />
                 </MenuButton>
                 <MenuList alignItems='center' bg={bg}>
                   <Center>
-                    <Avatar size='2xl' src={profile?.avatar_url} />
+                    <Avatar size='2xl' src={profile.avatar_url} />
                   </Center>
                   <br />
                   <Center>
-                    <p>{profile?.username === '' ? 'Welcome' : profile?.username}</p>
+                    <p>{profile.username === '' ? 'Welcome' : profile?.username}</p>
                   </Center>
                   <br />
                   <MenuDivider />

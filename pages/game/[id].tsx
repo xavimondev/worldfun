@@ -9,6 +9,7 @@ import { showNotification } from 'utils/notification'
 import { copyTextToClipboard } from 'utils/copyClipboard'
 import { Room } from 'types/room'
 import { Question } from 'types/quiz'
+import { supabase } from 'services'
 import { listenNewParticipants, removeSubscription } from 'services/room-participant'
 import { getQuestions } from 'services/game'
 
@@ -163,7 +164,13 @@ const RoomGame = ({ dataGame }: Props) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps = async ({ query, req }) => {
+  const { user } = await supabase.auth.api.getUserByCookie(req)
+
+  if (!user) {
+    return { redirect: { destination: '/auth', permanent: false } }
+  }
+
   const { idCategory, difficulty } = query
   let data = []
 

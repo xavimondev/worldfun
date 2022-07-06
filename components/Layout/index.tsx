@@ -1,23 +1,17 @@
-import { Box, Container, Flex } from '@chakra-ui/react'
-import Navbar from 'components/Navbar'
-import useProfile from 'hooks/useProfile'
-import { useRouter } from 'next/router'
 import React from 'react'
+import { Box, Flex } from '@chakra-ui/react'
+import { Profile } from 'types/user'
+import Navbar from 'components/Navbar'
 
 type Props = {
+  profile: Profile
   children: React.ReactNode
 }
 
-const Layout = ({ children }: Props) => {
-  const { isLoading, profile } = useProfile()
-  const router = useRouter()
-
-  // if (!profile) router.push('/auth')
-  if (isLoading) return <h1>Loading...</h1>
-
+const Layout = ({ profile, children }: Props) => {
   return (
     <Flex m={6} gap={2} direction='column'>
-      <Navbar />
+      <Navbar profile={profile} />
       <Box>{children}</Box>
     </Flex>
   )

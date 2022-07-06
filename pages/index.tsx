@@ -1,17 +1,25 @@
-import type { NextPage } from 'next'
-
+import type { GetServerSideProps, NextPage } from 'next'
+import { Flex, Heading } from '@chakra-ui/react'
+import { Profile } from 'types/user'
+import { getUserProfile } from 'utils/getUserProfile'
+import { supabase } from 'services'
+import useAuth from 'hooks/useAuth'
 import HeaderSeo from 'components/Seo/HeaderSeo'
 import Layout from 'components/Layout'
-import { Flex, Heading } from '@chakra-ui/react'
 import DifficultyPanel from 'components/Game/DifficultyPanel'
 import CategoryPanel from 'components/Game/CategoryPanel'
 import ModePanel from 'components/Game/ModePanel'
 
-const Home: NextPage = () => {
+type Props = {
+  profile: Profile
+}
+
+const Home: NextPage<Props> = ({ profile }) => {
+  useAuth()
   return (
     <>
       <HeaderSeo title='Home' content='Welcome to this world' />
-      <Layout>
+      <Layout profile={profile}>
         <Flex direction='column' gap={8}>
           <Heading fontSize='3xl' fontWeight='semibold'>
             Start New Game
@@ -25,6 +33,16 @@ const Home: NextPage = () => {
       </Layout>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { user } = await supabase.auth.api.getUserByCookie(req)
+  if (!user) {
+    return { redirect: { destination: '/auth', permanent: false } }
+  }
+
+  const profile = await getUserProfile(user)
+  return { props: { profile } }
 }
 
 export default Home

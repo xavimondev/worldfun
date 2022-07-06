@@ -15,13 +15,11 @@ const theme = extendTheme({ config })
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
-      <AuthProvider>
-        <StepProvider>
-          <GameProvider>
-            <Component {...pageProps} />
-          </GameProvider>
-        </StepProvider>
-      </AuthProvider>
+      <StepProvider>
+        <GameProvider>
+          <Component {...pageProps} />
+        </GameProvider>
+      </StepProvider>
     </ChakraProvider>
   )
 }
