@@ -7,7 +7,7 @@ const getUserDataFromProvider = (user: User) => {
   return { avatar: avatar_url, email, fullName: full_name }
 }
 
-export const getUserProfileFormatted = async (user: User) => {
+export const getUserProfileFormatted = (user: User) => {
   let profile: Profile | undefined = undefined
   const { app_metadata, id } = user
 

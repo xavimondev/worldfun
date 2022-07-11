@@ -3,6 +3,7 @@ import { Flex, Heading } from '@chakra-ui/react'
 import { Profile } from 'types/user'
 import { getUserProfileFormatted } from 'utils/getProfile'
 import { supabase } from 'services'
+import { saveProfile } from 'services/profile'
 import useAuth from 'hooks/useAuth'
 import HeaderSeo from 'components/Seo/HeaderSeo'
 import Layout from 'components/Layout'
@@ -41,7 +42,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     return { redirect: { destination: '/auth', permanent: false } }
   }
 
-  const profile = await getUserProfileFormatted(user)
+  const profile = getUserProfileFormatted(user)
+  profile && (await saveProfile(profile))
   return { props: { profile } }
 }
 

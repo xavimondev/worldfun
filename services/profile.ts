@@ -2,7 +2,7 @@ import { supabase } from './'
 import { Profile } from 'types/user'
 
 export const saveProfile = async (profile: Profile) => {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from<Profile>('Profile')
     .insert(profile, { returning: 'minimal' })
 
@@ -10,5 +10,4 @@ export const saveProfile = async (profile: Profile) => {
     console.error(error)
     return null
   }
-  return data
 }
