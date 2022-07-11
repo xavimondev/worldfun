@@ -1,6 +1,10 @@
+import { User } from '@supabase/supabase-js'
+
 export interface Profile {
   id?: string
-  username: string
+  userId: User['id']
+  fullName: string
   email: string
-  avatar_url: string
+  avatar: string
+  createdAt?: Date
 }

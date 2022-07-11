@@ -31,15 +31,15 @@ const Navbar = ({ profile }: Props) => {
             <Box>
               <Menu>
                 <MenuButton as={Button} rounded='full' variant='link' cursor='pointer' minW={0}>
-                  <Avatar size='sm' src={profile.avatar_url} />
+                  <Avatar size='sm' src={profile.avatar} />
                 </MenuButton>
                 <MenuList alignItems='center' bg={bg}>
                   <Center>
-                    <Avatar size='2xl' src={profile.avatar_url} />
+                    <Avatar size='2xl' src={profile.avatar} />
                   </Center>
                   <br />
                   <Center>
-                    <p>{profile.username === '' ? 'Welcome' : profile?.username}</p>
+                    <p>{profile.fullName === '' ? 'Welcome' : profile?.fullName}</p>
                   </Center>
                   <br />
                   <MenuDivider />
