@@ -1,0 +1,8 @@
+CREATE TABLE "Profile" (
+  "id" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  "userId" uuid REFERENCES auth.users (id) ON DELETE CASCADE,
+  "fullName" VARCHAR(100) NOT NULL,
+  "email" VARCHAR(20) NOT NULL UNIQUE,
+  "avatar" TEXT NOT NULL,
+  "createdAt" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+)
