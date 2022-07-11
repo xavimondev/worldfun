@@ -29,18 +29,3 @@ export const logout = async () => {
     return null
   }
 }
-
-// Get profile of specific user
-export const getProfile = async (userId: User['id']) => {
-  try {
-    const { data, error } = await supabase
-      .from<User>('profiles')
-      .select('username, avatar_url, updated_at')
-      .eq('id', userId)
-      .single()
-    if (error) throw error
-    return data
-  } catch (error) {
-    console.log(error)
-  }
-}
