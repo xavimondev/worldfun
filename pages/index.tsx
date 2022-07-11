@@ -42,6 +42,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     return { redirect: { destination: '/auth', permanent: false } }
   }
 
+  // TODO: Eventually, this code will be improved because the validation
+  //should be done only the first time that user enter to application
+  // Besides, the validation should take place in all pages
   const profile = getUserProfileFormatted(user)
   profile && (await saveProfile(profile))
   return { props: { profile } }
