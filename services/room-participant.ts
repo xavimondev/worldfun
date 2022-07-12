@@ -1,5 +1,5 @@
 import { RoomParticipant } from 'types/room-participant'
-import { RealtimeSubscription, User } from '@supabase/supabase-js'
+import { User } from '@supabase/supabase-js'
 import { supabase } from 'services'
 import { Room } from 'types/room'
 
@@ -20,24 +20,6 @@ export const saveParticipant = async (participantId: User['id'], roomId: Room['i
   return data
 }
 
-let clientRealTime: RealtimeSubscription
-
-export const listenNewParticipants = () => {
-  clientRealTime = supabase
-    .from('RoomParticipants')
-    .on('INSERT', (payload) => {
-      console.log('Change received!', payload)
-    })
-    .subscribe()
-  // return clientRealTime
-}
-
-export const removeSubscription = async () => {
-  if (clientRealTime) {
-    await supabase.removeSubscription(clientRealTime)
-  }
-}
-
 export const getTotalParticipantsByRoom = async (roomId: Room['id']) => {
   const { count, error } = await supabase
     .from<RoomParticipant>('RoomParticipants')
@@ -51,8 +33,11 @@ export const getTotalParticipantsByRoom = async (roomId: Room['id']) => {
   return count
 }
 
-export const getParticipantsByRoom = async (roomId: Room['id']) => {
-  const { data, error } = await supabase.rpc('getParticipantsByRoom', { roomid: roomId })
+export const getParticipantsByRoom = async (roomId: Room['id'], participantId: string) => {
+  const { data, error } = await supabase.rpc('getParticipantsByRoom', {
+    room_id: roomId,
+    participant_id: participantId
+  })
   if (error) {
     console.error(error)
     return null

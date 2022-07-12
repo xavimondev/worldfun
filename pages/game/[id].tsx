@@ -10,14 +10,11 @@ import { copyTextToClipboard } from 'utils/copyClipboard'
 import { Room } from 'types/room'
 import { Question } from 'types/quiz'
 import { supabase } from 'services'
-import {
-  getParticipantsByRoom,
-  listenNewParticipants,
-  removeSubscription
-} from 'services/room-participant'
+import { getParticipantsByRoom } from 'services/room-participant'
 import { getQuestions } from 'services/game'
 
 import { useGame } from 'context/GameContext'
+import useSubscription from 'hooks/useSubscription'
 import RoomLoader from 'components/Loaders/RoomLoader'
 import HeaderSeo from 'components/Seo/HeaderSeo'
 import ExitGameButton from 'components/Buttons/CloseButton'
@@ -35,6 +32,7 @@ const RoomGame = ({ dataGame }: Props) => {
   const [userAnswer, setUserAnswer] = useState<string>('')
   const [correctAnswer, setCorrectAnswer] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { listParticipants, setListParticipants } = useSubscription()
   const { room, checkRoomExists, setRoom } = useGame()
   const { code, name } = room
   const { category, difficulty, question, listAlternatives } = dataGame[currentNumberQuestion]
@@ -51,18 +49,21 @@ const RoomGame = ({ dataGame }: Props) => {
         setIsLoading(false)
         if (room) {
           const { name, code, id } = room
+          const userId = supabase.auth.user()!.id
+
           setRoom({ name, code })
-          getParticipantsByRoom(id).then((response) => {
-            console.log(response)
+          getParticipantsByRoom(id, userId).then((response) => {
+            if (response && response.length > 0) {
+              const participantRegistered = response.at(0)
+              setListParticipants((prevParticipants) => [
+                ...prevParticipants,
+                participantRegistered
+              ])
+              console.log(response)
+            }
           })
         }
       })
-
-      listenNewParticipants()
-      return () => {
-        console.log('Removing subscription')
-        removeSubscription()
-      }
     }
   }, [])
 
@@ -144,12 +145,20 @@ const RoomGame = ({ dataGame }: Props) => {
                 Participants
               </Text>
               <List spacing={6}>
-                <ListItem display='flex' flexDirection='row' gap='10px' alignItems='center'>
-                  <Avatar size='sm' name='midudev' src='https://midu.dev/images/tags/me.png' />
-                  <Text fontSize='xl' fontWeight='semibold'>
-                    midudev
-                  </Text>
-                </ListItem>
+                {listParticipants.map((participant) => (
+                  <ListItem
+                    display='flex'
+                    flexDirection='row'
+                    gap='10px'
+                    alignItems='center'
+                    key={participant.userId}
+                  >
+                    <Avatar size='sm' name={participant.fullName} src={participant.avatar} />
+                    <Text fontSize='xl' fontWeight='semibold'>
+                      {participant.fullName}
+                    </Text>
+                  </ListItem>
+                ))}
               </List>
             </Box>
             <Box
