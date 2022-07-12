@@ -10,7 +10,11 @@ import { copyTextToClipboard } from 'utils/copyClipboard'
 import { Room } from 'types/room'
 import { Question } from 'types/quiz'
 import { supabase } from 'services'
-import { listenNewParticipants, removeSubscription } from 'services/room-participant'
+import {
+  getParticipantsByRoom,
+  listenNewParticipants,
+  removeSubscription
+} from 'services/room-participant'
 import { getQuestions } from 'services/game'
 
 import { useGame } from 'context/GameContext'
@@ -46,8 +50,11 @@ const RoomGame = ({ dataGame }: Props) => {
       checkRoomExists(roomId).then((room: Room | undefined) => {
         setIsLoading(false)
         if (room) {
-          const { name, code } = room
+          const { name, code, id } = room
           setRoom({ name, code })
+          getParticipantsByRoom(id).then((response) => {
+            console.log(response)
+          })
         }
       })
 

@@ -50,3 +50,12 @@ export const getTotalParticipantsByRoom = async (roomId: Room['id']) => {
   }
   return count
 }
+
+export const getParticipantsByRoom = async (roomId: Room['id']) => {
+  const { data, error } = await supabase.rpc('getParticipantsByRoom', { roomid: roomId })
+  if (error) {
+    console.error(error)
+    return null
+  }
+  return data
+}
