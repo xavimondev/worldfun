@@ -23,9 +23,10 @@ import GameHeader from 'components/Panels/Game/GameHeader'
 
 type Props = {
   dataGame: Question[]
+  userId: string
 }
 
-const RoomGame = ({ dataGame }: Props) => {
+const RoomGame = ({ dataGame, userId }: Props) => {
   const [currentNumberQuestion, setCurrentNumberQuestion] = useState<number>(0)
   const [totalScore, setTotalScore] = useState<number>(0)
   const [isGameOver, setIsGameOver] = useState<boolean>(false)
@@ -155,7 +156,9 @@ const RoomGame = ({ dataGame }: Props) => {
                   >
                     <Avatar size='sm' name={participant.fullName} src={participant.avatar} />
                     <Text fontSize='xl' fontWeight='semibold'>
-                      {participant.fullName}
+                      {userId === participant.userId
+                        ? `${participant.fullName}(You)`
+                        : participant.fullName}
                     </Text>
                   </ListItem>
                 ))}
@@ -186,7 +189,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
   if (!user) {
     return { redirect: { destination: '/auth', permanent: false } }
   }
-
   const { idCategory, difficulty } = query
   let data = []
 
@@ -198,7 +200,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
 
   return {
     props: {
-      dataGame: data
+      dataGame: data,
+      userId: user.id
     }
   }
 }
