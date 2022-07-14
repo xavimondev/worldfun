@@ -4,7 +4,7 @@ import { supabase } from 'services'
 import { Room } from 'types/room'
 
 /**
- *
+ * Add a new participant to a room
  * @param participantId - Represents current user logged in
  * @param roomId - Represents room where users is going to play
  */
@@ -33,6 +33,11 @@ export const getTotalParticipantsByRoom = async (roomId: Room['id']) => {
   return count
 }
 
+/**
+ * Get all participants of room without take into consideration the participant sent in parameters
+ * @param roomId - Represents room
+ * @param participantId - Represents participant's id which will not include in the query
+ */
 export const getParticipantsByRoom = async (roomId: Room['id'], participantId: string) => {
   const { data, error } = await supabase.rpc('getParticipantsByRoom', {
     room_id: roomId,
