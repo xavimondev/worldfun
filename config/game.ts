@@ -32,4 +32,6 @@ const config = {
   }
 }
 
+export const REALTIME_SERVER = process.env.REALTIME_SERVER || 'http://localhost:4000'
+
 export default config

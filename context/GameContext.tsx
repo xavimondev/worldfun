@@ -5,11 +5,10 @@ import { getRoomByCode, saveRoom } from 'services/room'
 import { getTotalParticipantsByRoom, saveParticipant } from 'services/room-participant'
 import { Room } from 'types/room'
 import { useStep } from './StepContext'
-
-// Socket
+// Realtime
 import io, { Socket } from 'socket.io-client'
+import { REALTIME_SERVER } from 'config/game'
 
-const REALTIME_SERVER = process.env.REALTIME_SERVER || 'http://localhost:4000'
 const socket = io(REALTIME_SERVER)
 
 type GameState = {
