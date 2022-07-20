@@ -6,10 +6,17 @@ import { getTotalParticipantsByRoom, saveParticipant } from 'services/room-parti
 import { Room } from 'types/room'
 import { useStep } from './StepContext'
 
+// Socket
+import io, { Socket } from 'socket.io-client'
+
+const REALTIME_SERVER = process.env.REALTIME_SERVER || 'http://localhost:4000'
+const socket = io(REALTIME_SERVER)
+
 type GameState = {
   room: Room
   setRoom: Dispatch<SetStateAction<Room>>
   checkRoomExists: (code: string) => Promise<Room | undefined>
+  socket: Socket
 }
 
 const GameContext = createContext<GameState | undefined>(undefined)
@@ -85,7 +92,8 @@ export const GameProvider = ({ children }: Props) => {
   const valuesContext = {
     room,
     setRoom,
-    checkRoomExists
+    checkRoomExists,
+    socket
   }
   return <GameContext.Provider value={valuesContext}>{children}</GameContext.Provider>
 }
