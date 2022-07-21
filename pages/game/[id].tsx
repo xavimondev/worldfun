@@ -7,14 +7,13 @@ import { Toaster } from 'react-hot-toast'
 import config from 'config/game'
 import { showNotification } from 'utils/notification'
 import { copyTextToClipboard } from 'utils/copyClipboard'
-import { Room } from 'types/room'
+import { getUserProfileFormatted } from 'utils/getProfile'
+import { Profile } from 'types/user'
 import { Question } from 'types/quiz'
 import { supabase } from 'services'
-import { getParticipantsByRoom } from 'services/room-participant'
 import { getQuestions } from 'services/game'
 
 import { useGame } from 'context/GameContext'
-import useSubscription from 'hooks/useSubscription'
 import RoomLoader from 'components/Loaders/RoomLoader'
 import HeaderSeo from 'components/Seo/HeaderSeo'
 import ExitGameButton from 'components/Buttons/CloseButton'
@@ -23,49 +22,61 @@ import GameHeader from 'components/Panels/Game/GameHeader'
 
 type Props = {
   dataGame: Question[]
-  userId: string
+  profile: Profile
 }
 
-const RoomGame = ({ dataGame, userId }: Props) => {
+const RoomGame = ({ dataGame, profile }: Props) => {
   const [currentNumberQuestion, setCurrentNumberQuestion] = useState<number>(0)
   const [totalScore, setTotalScore] = useState<number>(0)
   const [isGameOver, setIsGameOver] = useState<boolean>(false)
   const [userAnswer, setUserAnswer] = useState<string>('')
   const [correctAnswer, setCorrectAnswer] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const { listParticipants, setListParticipants } = useSubscription()
-  const { room, checkRoomExists, setRoom } = useGame()
+  const [listParticipants, setListParticipants] = useState<Profile[]>([])
+  // const { listParticipants, setListParticipants } = useSubscription()
+  const { room, checkRoomExists, setRoom, socket } = useGame()
   const { code, name } = room
   const { category, difficulty, question, listAlternatives } = dataGame[currentNumberQuestion]
 
   const { query } = useRouter()
   const { id } = query
-
   useEffect(() => {
-    setIsLoading(true)
+    socket.emit('join', { room: id, user: profile })
 
-    if (id) {
-      const roomId = id as string
-      checkRoomExists(roomId).then((room: Room | undefined) => {
-        setIsLoading(false)
-        if (room) {
-          const { name, code, id } = room
-          const userId = supabase.auth.user()!.id
+    // Listening for upcoming participants
+    socket.on('new-user', (newParticipant: Profile) => {
+      // console.log(`Listen for new participant: ${JSON.stringify(newParticipant)}`)
+      setListParticipants((prevParticipants) => [...prevParticipants, newParticipant])
+    })
 
-          setRoom({ name, code })
-          getParticipantsByRoom(id, userId).then((response) => {
-            if (response && response.length > 0) {
-              const participantRegistered = response.at(0)
-              setListParticipants((prevParticipants) => [
-                ...prevParticipants,
-                participantRegistered
-              ])
-              console.log(response)
-            }
-          })
-        }
-      })
-    }
+    // Listening for participants are connected
+    socket.on('connected-users', (participantsConnected: Profile[]) => {
+      // console.log(`Participants already connected: ${participantsConnected}`)
+      const currentParticipant = { ...profile }
+      setListParticipants([currentParticipant, ...participantsConnected])
+    })
+    // setIsLoading(true)
+    // if (id) {
+    //   const roomId = id as string
+    //   checkRoomExists(roomId).then((room: Room | undefined) => {
+    //     setIsLoading(false)
+    //     if (room) {
+    //       const { name, code, id } = room
+    //       const userId = supabase.auth.user()!.id
+    //       setRoom({ name, code })
+    //       getParticipantsByRoom(id, userId).then((response) => {
+    //         if (response && response.length > 0) {
+    //           const participantRegistered = response.at(0)
+    //           setListParticipants((prevParticipants) => [
+    //             ...prevParticipants,
+    //             participantRegistered
+    //           ])
+    //           console.log(response)
+    //         }
+    //       })
+    //     }
+    //   })
+    // }
   }, [])
 
   // Copy to clipboard the shareableCode and then show notification
@@ -156,7 +167,7 @@ const RoomGame = ({ dataGame, userId }: Props) => {
                   >
                     <Avatar size='sm' name={participant.fullName} src={participant.avatar} />
                     <Text fontSize='xl' fontWeight='semibold'>
-                      {userId === participant.userId
+                      {profile.userId === participant.userId
                         ? `${participant.fullName}(You)`
                         : participant.fullName}
                     </Text>
@@ -198,10 +209,12 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
     data = await getQuestions(idCategorySelected, difficultySelected)
   }
 
+  const profile = getUserProfileFormatted(user)
+
   return {
     props: {
       dataGame: data,
-      userId: user.id
+      profile
     }
   }
 }
