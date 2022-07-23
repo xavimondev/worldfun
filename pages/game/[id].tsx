@@ -81,28 +81,6 @@ const RoomGame = ({ dataGame, profile }: Props) => {
         prevParticipants.filter((par) => par.userId !== participantDisconnected.userId)
       )
     })
-    // setIsLoading(true)
-    // if (id) {
-    //   const roomId = id as string
-    //   checkRoomExists(roomId).then((room: Room | undefined) => {
-    //     setIsLoading(false)
-    //     if (room) {
-    //       const { name, code, id } = room
-    //       const userId = supabase.auth.user()!.id
-    //       setRoom({ name, code })
-    //       getParticipantsByRoom(id, userId).then((response) => {
-    //         if (response && response.length > 0) {
-    //           const participantRegistered = response.at(0)
-    //           setListParticipants((prevParticipants) => [
-    //             ...prevParticipants,
-    //             participantRegistered
-    //           ])
-    //           console.log(response)
-    //         }
-    //       })
-    //     }
-    //   })
-    // }
 
     return () => {
       socket?.off('newParticipantJoined')
