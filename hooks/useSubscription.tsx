@@ -1,38 +1,60 @@
-import { SupabaseRealtimePayload } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
-import { supabase } from 'services'
-import { searchProfileByUserId } from 'services/profile'
 
-const useSubscription = () => {
-  const [listParticipants, setListParticipants] = useState<any[]>([])
+// Realtime
+import io, { Socket } from 'socket.io-client'
+import { ClienteToServerEvents } from 'types/realtime'
+import { REALTIME_SERVER } from 'config/game'
+import { Profile } from 'types/user'
+
+let socket: Socket<ClienteToServerEvents> | null = null
+
+const useSubscription = (participant: Profile, roomId: string | undefined) => {
+  const [listParticipants, setListParticipants] = useState<Profile[]>([])
 
   useEffect(() => {
-    const handleInsertSubscription = async (payload: SupabaseRealtimePayload<any>) => {
-      const { new: newParticipant } = payload
-      const { participantId } = newParticipant
-      const profileUser = await searchProfileByUserId(participantId)
-      if (profileUser) {
-        const [infoParticipant] = profileUser
-        console.log('New participant joined the room', infoParticipant)
-        setListParticipants((prevParticipants) => [...prevParticipants, infoParticipant])
-      }
+    const socketData = {
+      user: participant,
+      room: roomId
     }
+    socket = io(REALTIME_SERVER, {
+      extraHeaders: {
+        'x-data': JSON.stringify(socketData)
+      }
+    })
+  }, [])
 
-    const subscription = supabase
-      .from('RoomParticipants')
-      .on('INSERT', handleInsertSubscription)
-      .subscribe((status: string) => {
-        console.log(status)
-      })
+  useEffect(() => {
+    if (!socket) return
+
+    // Listening for upcoming participants
+    socket.on('newParticipantJoined', (newParticipant: Profile) => {
+      // console.log(`Listen for new participant: ${JSON.stringify(newParticipant)}`)
+      setListParticipants((prevParticipants) => [...prevParticipants, newParticipant])
+    })
+
+    // Listening for participants are connected
+    socket.on('sendParticipants', (participantsConnected: Profile[]) => {
+      // console.log(`Participants already connected: ${participantsConnected}`)
+      const currentParticipant = { ...participant }
+      setListParticipants([currentParticipant, ...participantsConnected])
+    })
+
+    socket.on('participantLeft', (participantDisconnected: Profile) => {
+      setListParticipants((prevParticipants) =>
+        prevParticipants.filter((par) => par.userId !== participantDisconnected.userId)
+      )
+    })
 
     return () => {
-      supabase.removeSubscription(subscription)
+      socket?.off('newParticipantJoined')
+      socket?.off('sendParticipants')
+      socket?.off('participantLeft')
+      socket?.disconnect()
     }
   }, [])
 
   return {
-    listParticipants,
-    setListParticipants
+    listParticipants
   }
 }
 

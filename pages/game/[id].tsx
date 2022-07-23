@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { Avatar, Box, Grid, GridItem, List, ListItem, Text } from '@chakra-ui/react'
@@ -13,6 +13,7 @@ import { Question } from 'types/quiz'
 import { supabase } from 'services'
 import { getQuestions } from 'services/game'
 
+import useSubscription from 'hooks/useSubscription'
 import { useGame } from 'context/GameContext'
 import RoomLoader from 'components/Loaders/RoomLoader'
 import HeaderSeo from 'components/Seo/HeaderSeo'
@@ -20,17 +21,10 @@ import ExitGameButton from 'components/Buttons/CloseButton'
 import PanelGame from 'components/Panels/Game/PanelGame'
 import GameHeader from 'components/Panels/Game/GameHeader'
 
-// Realtime
-import io, { Socket } from 'socket.io-client'
-import { ClienteToServerEvents } from 'types/realtime'
-import { REALTIME_SERVER } from 'config/game'
-
 type Props = {
   dataGame: Question[]
   profile: Profile
 }
-
-let socket: Socket<ClienteToServerEvents> | null = null
 
 const RoomGame = ({ dataGame, profile }: Props) => {
   const [currentNumberQuestion, setCurrentNumberQuestion] = useState<number>(0)
@@ -39,8 +33,7 @@ const RoomGame = ({ dataGame, profile }: Props) => {
   const [userAnswer, setUserAnswer] = useState<string>('')
   const [correctAnswer, setCorrectAnswer] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [listParticipants, setListParticipants] = useState<Profile[]>([])
-  // const { listParticipants, setListParticipants } = useSubscription()
+
   const { room, checkRoomExists, setRoom } = useGame()
   const { code, name } = room
   const { category, difficulty, question, listAlternatives } = dataGame[currentNumberQuestion]
@@ -48,47 +41,8 @@ const RoomGame = ({ dataGame, profile }: Props) => {
   const { query } = useRouter()
   const { id } = query
 
-  useEffect(() => {
-    const socketData = {
-      user: profile,
-      room: id
-    }
-    socket = io(REALTIME_SERVER, {
-      extraHeaders: {
-        'x-data': JSON.stringify(socketData)
-      }
-    })
-  }, [])
+  const { listParticipants } = useSubscription(profile, id as string)
 
-  useEffect(() => {
-    if (!socket) return
-
-    // Listening for upcoming participants
-    socket.on('newParticipantJoined', (newParticipant: Profile) => {
-      // console.log(`Listen for new participant: ${JSON.stringify(newParticipant)}`)
-      setListParticipants((prevParticipants) => [...prevParticipants, newParticipant])
-    })
-
-    // Listening for participants are connected
-    socket.on('sendParticipants', (participantsConnected: Profile[]) => {
-      // console.log(`Participants already connected: ${participantsConnected}`)
-      const currentParticipant = { ...profile }
-      setListParticipants([currentParticipant, ...participantsConnected])
-    })
-
-    socket.on('participantLeft', (participantDisconnected: Profile) => {
-      setListParticipants((prevParticipants) =>
-        prevParticipants.filter((par) => par.userId !== participantDisconnected.userId)
-      )
-    })
-
-    return () => {
-      socket?.off('newParticipantJoined')
-      socket?.off('sendParticipants')
-      socket?.off('participantLeft')
-      socket?.disconnect()
-    }
-  }, [])
   // Copy to clipboard the shareableCode and then show notification
   const copyCode = async (code: string) => {
     await copyTextToClipboard(code)
