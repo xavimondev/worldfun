@@ -20,10 +20,16 @@ import ExitGameButton from 'components/Buttons/CloseButton'
 import PanelGame from 'components/Panels/Game/PanelGame'
 import GameHeader from 'components/Panels/Game/GameHeader'
 
+// Realtime
+import io, { Socket } from 'socket.io-client'
+import { REALTIME_SERVER } from 'config/game'
+
 type Props = {
   dataGame: Question[]
   profile: Profile
 }
+
+let socket: Socket | null = null
 
 const RoomGame = ({ dataGame, profile }: Props) => {
   const [currentNumberQuestion, setCurrentNumberQuestion] = useState<number>(0)
@@ -34,14 +40,27 @@ const RoomGame = ({ dataGame, profile }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [listParticipants, setListParticipants] = useState<Profile[]>([])
   // const { listParticipants, setListParticipants } = useSubscription()
-  const { room, checkRoomExists, setRoom, socket } = useGame()
+  const { room, checkRoomExists, setRoom } = useGame()
   const { code, name } = room
   const { category, difficulty, question, listAlternatives } = dataGame[currentNumberQuestion]
 
   const { query } = useRouter()
   const { id } = query
+
   useEffect(() => {
-    socket.emit('join', { room: id, user: profile })
+    const socketData = {
+      user: profile,
+      room: id
+    }
+    socket = io(REALTIME_SERVER, {
+      extraHeaders: {
+        'x-data': JSON.stringify(socketData)
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    if (!socket) return
 
     // Listening for upcoming participants
     socket.on('new-user', (newParticipant: Profile) => {
@@ -54,6 +73,12 @@ const RoomGame = ({ dataGame, profile }: Props) => {
       // console.log(`Participants already connected: ${participantsConnected}`)
       const currentParticipant = { ...profile }
       setListParticipants([currentParticipant, ...participantsConnected])
+    })
+
+    socket.on('user-left', (participantDisconnected: Profile) => {
+      setListParticipants((prevParticipants) =>
+        prevParticipants.filter((par) => par.userId !== participantDisconnected.userId)
+      )
     })
     // setIsLoading(true)
     // if (id) {
@@ -77,8 +102,14 @@ const RoomGame = ({ dataGame, profile }: Props) => {
     //     }
     //   })
     // }
-  }, [])
 
+    return () => {
+      socket?.off('new-user')
+      socket?.off('connected-users')
+      socket?.off('user-left')
+      socket?.disconnect()
+    }
+  }, [])
   // Copy to clipboard the shareableCode and then show notification
   const copyCode = async (code: string) => {
     await copyTextToClipboard(code)
