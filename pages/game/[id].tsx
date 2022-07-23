@@ -22,6 +22,7 @@ import GameHeader from 'components/Panels/Game/GameHeader'
 
 // Realtime
 import io, { Socket } from 'socket.io-client'
+import { ClienteToServerEvents } from 'types/realtime'
 import { REALTIME_SERVER } from 'config/game'
 
 type Props = {
@@ -29,7 +30,7 @@ type Props = {
   profile: Profile
 }
 
-let socket: Socket | null = null
+let socket: Socket<ClienteToServerEvents> | null = null
 
 const RoomGame = ({ dataGame, profile }: Props) => {
   const [currentNumberQuestion, setCurrentNumberQuestion] = useState<number>(0)
@@ -63,19 +64,19 @@ const RoomGame = ({ dataGame, profile }: Props) => {
     if (!socket) return
 
     // Listening for upcoming participants
-    socket.on('new-user', (newParticipant: Profile) => {
+    socket.on('newParticipantJoined', (newParticipant: Profile) => {
       // console.log(`Listen for new participant: ${JSON.stringify(newParticipant)}`)
       setListParticipants((prevParticipants) => [...prevParticipants, newParticipant])
     })
 
     // Listening for participants are connected
-    socket.on('connected-users', (participantsConnected: Profile[]) => {
+    socket.on('sendParticipants', (participantsConnected: Profile[]) => {
       // console.log(`Participants already connected: ${participantsConnected}`)
       const currentParticipant = { ...profile }
       setListParticipants([currentParticipant, ...participantsConnected])
     })
 
-    socket.on('user-left', (participantDisconnected: Profile) => {
+    socket.on('participantLeft', (participantDisconnected: Profile) => {
       setListParticipants((prevParticipants) =>
         prevParticipants.filter((par) => par.userId !== participantDisconnected.userId)
       )
@@ -104,9 +105,9 @@ const RoomGame = ({ dataGame, profile }: Props) => {
     // }
 
     return () => {
-      socket?.off('new-user')
-      socket?.off('connected-users')
-      socket?.off('user-left')
+      socket?.off('newParticipantJoined')
+      socket?.off('sendParticipants')
+      socket?.off('participantLeft')
       socket?.disconnect()
     }
   }, [])
