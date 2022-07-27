@@ -2,14 +2,14 @@ import { createContext, Dispatch, SetStateAction, useContext, useState } from 'r
 import { supabase } from 'services'
 import { savePreferencesGame } from 'services/game'
 import { getRoomByCode, saveRoom } from 'services/room'
-import { getTotalParticipantsByRoom, saveParticipant } from 'services/room-participant'
+import { saveParticipant } from 'services/room-participant'
 import { Room } from 'types/room'
 import { useStep } from './StepContext'
 
 type GameState = {
   room: Room
   setRoom: Dispatch<SetStateAction<Room>>
-  checkRoomExists: (code: string) => Promise<Room | undefined>
+  checkRoomExists: (code: string) => Promise<Room>
 }
 
 const GameContext = createContext<GameState | undefined>(undefined)
@@ -29,22 +29,14 @@ export const GameProvider = ({ children }: Props) => {
 
   const checkRoomExists = async (code: string) => {
     const result = await getRoomByCode(code)
-    if (!result) return
-
+    if (!result) throw new Error('Room not found')
+    // If room not found, create it
     if (result.length === 0) {
       saveRoomOnDatabase()
-      return
+      return room
     }
-
+    // Return room found
     const roomFound = result[0]
-
-    const { id: roomId } = roomFound
-
-    const totalCurrentParticipants = await getTotalParticipantsByRoom(roomId)
-
-    if (totalCurrentParticipants && totalCurrentParticipants < 2)
-      await saveParticipantOnDatabase(roomId)
-
     return roomFound
   }
 

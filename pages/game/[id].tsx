@@ -20,6 +20,7 @@ import HeaderSeo from 'components/Seo/HeaderSeo'
 import ExitGameButton from 'components/Buttons/CloseButton'
 import PanelGame from 'components/Panels/Game/PanelGame'
 import GameHeader from 'components/Panels/Game/GameHeader'
+import useRoom from 'hooks/useRoom'
 
 type Props = {
   dataGame: Question[]
@@ -34,14 +35,14 @@ const RoomGame = ({ dataGame, profile }: Props) => {
   const [correctAnswer, setCorrectAnswer] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const { room, checkRoomExists, setRoom } = useGame()
+  const { room } = useGame()
   const { code, name } = room
   const { category, difficulty, question, listAlternatives } = dataGame[currentNumberQuestion]
 
   const { query } = useRouter()
-  const { id } = query
-
-  const { listParticipants } = useSubscription(profile, id as string)
+  const { id: gameCode } = query
+  useRoom(gameCode as string)
+  const { listParticipants } = useSubscription(profile, gameCode as string)
 
   // Copy to clipboard the shareableCode and then show notification
   const copyCode = async (code: string) => {

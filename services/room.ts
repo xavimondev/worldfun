@@ -24,7 +24,7 @@ export const filterRoomsByCode = async (code: string) => {
 }
 
 export const getRoomByCode = async (code: string) => {
-  const { data, error } = await supabase.from<Room>('Room').select('id,name,code').eq('code', code)
+  const { data, error } = await supabase.from<Room>('Room').select('name,code').eq('code', code)
 
   if (error) {
     console.log(error)
